@@ -52,26 +52,19 @@ class AuthController extends Controller
 
     public function sendResetLink(Request $request)
     {
-        // Validate the email address
         $request->validate([
             'email' => 'required|email|exists:users,email',
         ]);
 
-        // Retrieve the user by their email address
         $user = User::where('email', $request->email)->first();
 
-        // Generate a new random password
-        $newPassword = Str::random(8); // Generate a random 8-character password
-
-        // Update the user's password in the database
+        $newPassword = Str::random(8); 
         $user->update([
-            'password' => Hash::make($newPassword), // Always hash the password before saving
+            'password' => Hash::make($newPassword), 
         ]);
 
-        // Send the new password via email
         Mail::to($user->email)->send(new PasswordResetMail($user, $newPassword));
 
-        // Return a success message to notify the user
         return back()->with('success', 'A new password has been sent to your email address.');
     }
 }
