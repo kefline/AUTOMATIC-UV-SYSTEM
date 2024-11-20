@@ -416,24 +416,26 @@ if (typeof jQuery === 'undefined') {
       }
     
       Tree.prototype.toggle = function (link, event) {
-        var treeviewMenu = link.next(Selector.treeviewMenu)
-        var parentLi     = link.parent()
-        var isOpen       = parentLi.hasClass(ClassName.open)
+        var treeviewMenu = link.next(Selector.treeviewMenu);
+        var parentLi = link.parent();
+        var isOpen = parentLi.hasClass(ClassName.open);
     
+        // Check if the clicked item is not a treeview parent
         if (!parentLi.is(Selector.treeview)) {
-          return
+            return; // Skip collapsing
         }
     
         if (!this.options.followLink || link.attr('href') == '#') {
-          event.preventDefault()
+            event.preventDefault();
         }
     
         if (isOpen) {
-          this.collapse(treeviewMenu, parentLi)
+            this.collapse(treeviewMenu, parentLi);
         } else {
-          this.expand(treeviewMenu, parentLi)
+            this.expand(treeviewMenu, parentLi);
         }
-      }
+    };
+    
     
       Tree.prototype.expand = function (tree, parent) {
         var expandedEvent = $.Event(Event.expanded)
@@ -504,14 +506,7 @@ if (typeof jQuery === 'undefined') {
     
     }(jQuery) // End of use strict
     
-    
-    /* ControlSidebar()
-     * Toggles the state of the control sidebar
-     *
-     * @Usage: $('#control-sidebar-trigger').controlSidebar(options)
-     *         or add [data-toggle="control-sidebar"] to the trigger
-     *         Pass any option as data-option="value"
-     */
+  
     +function ($) {
       'use strict'
     

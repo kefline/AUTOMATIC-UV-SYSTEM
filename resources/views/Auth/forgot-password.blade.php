@@ -44,6 +44,7 @@
                                         </ul>
                                     </div>
                                 @endif
+                                @include('_message')
                                 <form action="{{ route('password.email') }}" method="POST">
                                     @csrf
                                     <div class="form-group">

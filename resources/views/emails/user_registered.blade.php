@@ -25,6 +25,8 @@
         }
     </style>
 </head>
+
+@include('_message')
 <body>
     <div class="container">
         <h2>Welcome, {{ $user->name }}!</h2>

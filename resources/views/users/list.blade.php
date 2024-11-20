@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- Mirrored from solar-admin-template.multipurposethemes.com/bs5/template/vertical/main/tables_data.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 21 Oct 2024 13:50:42 GMT -->
 
 <head>
     <meta charset="utf-8">
@@ -13,13 +12,11 @@
 
     <title>Solar Admin - Dashboard Data Tables</title>
 
-    <!-- Vendors Style-->
     <link rel="stylesheet"
         href="https://solar-admin-template.multipurposethemes.com/bs5/template/vertical/src/css/vendors_css.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
 
-    <!-- Style-->
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/skin_color.css">
 
@@ -247,17 +244,14 @@
 								</a>
 							</li>
 							
-							<li class="treeview">
-								<a href="#">
-									<i data-feather="user"></i><span class="path1"></span><span class="path2"></span></i>User Management
-									<span class="pull-right-container">
-										<i class="fa fa-angle-right pull-right"></i>
-									</span>
+                            <li class="nav-item dropdown">
+								<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+									<i data-feather="users"></i>
+									<span>User Management</span>
 								</a>
-								<ul class="treeview-menu">
-									<li><a href="{{route('users.list')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>List Users</a></li>
-									<li><a href="{{route('users.add')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Add Users</a></li>
-									
+								<ul class="dropdown-menu">
+									<li><a href="{{route('users.list')}}" class="dropdown-item">List  Users</a></li>
+									<li><a href="{{route('users.add')}}" class="dropdown-item">Add Users</a></li>
 								</ul>
 							</li>
 						</ul>
@@ -280,7 +274,7 @@
                                         <li class="breadcrumb-item"><a href="#"><i
                                                     class="mdi mdi-home-outline"></i></a></li>
                                         <li class="breadcrumb-item" aria-current="page">Users</li>
-                                        <li class="breadcrumb-item active" aria-current="page">Users Tables</li>
+                                        <li class="breadcrumb-item active" aria-current="page">List Users</li>
                                     </ol>
                                 </nav>
                             </div>

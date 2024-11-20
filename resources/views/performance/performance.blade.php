@@ -192,17 +192,14 @@
 							</a>
 						</li>
 						
-						<li class="treeview">
-							<a href="#">
-								<i data-feather="user"></i><span class="path1"></span><span class="path2"></span></i>User Management
-								<span class="pull-right-container">
-									<i class="fa fa-angle-right pull-right"></i>
-								</span>
+						<li class="nav-item dropdown">
+							<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+								<i data-feather="users"></i>
+								<span>User Management</span>
 							</a>
-							<ul class="treeview-menu">
-								<li><a href="{{route('users.list')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>List Users</a></li>
-								<li><a href="{{route('users.add')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Add Users</a></li>
-								
+							<ul class="dropdown-menu">
+								<li><a href="{{route('users.list')}}" class="dropdown-item">List  Users</a></li>
+								<li><a href="{{route('users.add')}}" class="dropdown-item">Add Users</a></li>
 							</ul>
 						</li>
 					</ul>

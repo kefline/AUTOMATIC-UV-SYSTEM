@@ -222,30 +222,23 @@
 									<span>Performance</span>
 								</a>
 							</li>
-							
-							<li class="treeview">
-								<a href="#">
-									<i data-feather="user"></i><span class="path1"></span><span class="path2"></span></i>User Management
-									<span class="pull-right-container">
-										<i class="fa fa-angle-right pull-right"></i>
-									</span>
+							<li class="nav-item dropdown">
+								<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+									<i data-feather="users"></i>
+									<span>User Management</span>
 								</a>
-								<ul class="treeview-menu">
-									<li><a href="{{route('users.list')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>List Users</a></li>
-									<li><a href="{{route('users.add')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Add Users</a></li>
-									
+								<ul class="dropdown-menu">
+									<li><a href="{{route('users.list')}}" class="dropdown-item">List  Users</a></li>
+									<li><a href="{{route('users.add')}}" class="dropdown-item">Add Users</a></li>
 								</ul>
 							</li>
-						</ul>
-
-
-					</div>
+							</ul>
+						</div>
 				</div>
 			</section>
 		</aside>
 		<div class="content-wrapper">
 			<div class="container-full">
-				<!-- Main content -->
 				<section class="content">
 					<div class="row">
 						<div class="col-xxl-4 col-xl-6 col-lg-6 col-12 ">
@@ -410,7 +403,7 @@
 						<div class="col-xxl-7 col-xl-12 col-12">
 							<div class="box information">
 								<div class="box-header">
-									<h4 class="box-title">Information</h4>
+									<h4 class="box-title">Users Information</h4>
 								</div>
 								<div class="box-body no-padding">
 									<div class="table-responsive">
@@ -422,7 +415,7 @@
 															<input class="form-check-input" type="checkbox" value=""
 																id="flexCheckDefault">
 															<label class="form-check-label" for="flexCheckDefault">
-																<span class="text-fade">Name</span>
+																<span class="text-fade">Users</span>
 															</label>
 														</div>
 													</th>
@@ -725,7 +718,6 @@
 					</div>
 
 				</section>
-				<!-- /.content -->
 			</div>
 		</div>
 

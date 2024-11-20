@@ -44,6 +44,7 @@
 							</ul>
 						</div>
 					@endif
+                            
                                 <form
                                     action="{{route('Auth.authenticate')}}"
                                     method="post">
