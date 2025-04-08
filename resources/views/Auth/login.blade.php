@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Solar Admin - Log in </title>
+    <title>Log in </title>
 
     <link rel="stylesheet"
         href="https://solar-admin-template.multipurposethemes.com/bs5/template/vertical/src/css/vendors_css.css">
@@ -36,15 +36,15 @@
                             </div>
                             <div class="p-40">
                                 @if ($errors->any())
-						<div class="alert alert-danger">
-							<ul>
-								@foreach ($errors->all() as $error)
-									<li>{{ $error }}</li>
-								@endforeach
-							</ul>
-						</div>
-					@endif
-                            
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                                @endif
+
                                 <form
                                     action="{{route('Auth.authenticate')}}"
                                     method="post">
@@ -64,6 +64,17 @@
                                                 placeholder="Password" required>
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text bg-transparent"><i class="fas fa-user-tag"></i></span>
+                                            <select name="role_id" class="form-control ps-15 bg-transparent" required>
+                                                <option value="" disabled selected>Select Role</option>
+                                                @foreach($roles as $role)
+                                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="checkbox">
@@ -78,12 +89,14 @@
                                                         class="ion ion-locked"></i> Forgot password?</a><br>
                                             </div>
                                         </div>
+
+
                                         <div class="col-12 text-center">
                                             <button type="submit" class="btn btn-primary w-p100 mt-10">SIGN IN</button>
                                         </div>
                                     </div>
                                 </form>
-                                
+
 
                                 <div class="text-center">
                                     <p class="mt-20 text-fade">- Sign With -</p>
@@ -99,7 +112,7 @@
                                         </a>
                                     </p>
                                 </div>
-                                
+
                             </div>
                         </div>
                     </div>

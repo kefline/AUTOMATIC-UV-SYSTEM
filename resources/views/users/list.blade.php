@@ -244,15 +244,12 @@
 								</a>
 							</li>
 							
-                            <li class="nav-item dropdown">
-								<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+                            <li >
+								<a href="{{route('users.add')}}">
 									<i data-feather="users"></i>
 									<span>User Management</span>
 								</a>
-								<ul class="dropdown-menu">
-									<li><a href="{{route('users.list')}}" class="dropdown-item">List  Users</a></li>
-									<li><a href="{{route('users.add')}}" class="dropdown-item">Add Users</a></li>
-								</ul>
+								
 							</li>
 						</ul>
 
@@ -298,12 +295,10 @@
                                         class="table text-fade table-bordered table-hover display nowrap margin-top-10 w-p100">
                                         <thead>
                                             <tr class="text-dark">
-                                                <th>Name</th>
-                                                <th>Position</th>
-                                                <th>Office</th>
-                                                <th>Age</th>
+                                                <th>UserName</th>
+                                                <th>Email</th>
+                                                <th>Residence</th>
                                                 <th>Start date</th>
-                                                <th>Salary</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -311,9 +306,7 @@
                                                 <td class="text-dark">Tiger Nixon</td>
                                                 <td>System Architect</td>
                                                 <td>Edinburgh</td>
-                                                <td>61</td>
                                                 <td>2011/04/25</td>
-                                                <td>$320,800</td>
                                             </tr>
                                         </tbody>
                                     </table>

@@ -8,31 +8,39 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Role;
+
 use App\Mail\PasswordResetMail;
 
 class AuthController extends Controller
 {
-    //
 
     public function login()
     {
-        return view('Auth.login');
+        $roles = Role::all();
+        return view('Auth.login', compact('roles'));
     }
 
+
     public function authenticate(Request $request)
+
     {
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:6',
+            'role_id' => 'required|exists:roles,id',
         ]);
 
-        $credentials = $request->only('email', 'password');
+        $user = User::where('email', $request->email)
+            ->where('role_id', $request->role_id)
+            ->first();
 
-        if (Auth::attempt($credentials)) {
+        if ($user && Hash::check($request->password, $user->password)) {
+            Auth::login($user);
             return redirect()->intended('index');
         }
 
-        return back()->withErrors(['error' => 'Invalid email or password.']);
+        return back()->withErrors(['error' => 'Invalid email, password, or role.']);
     }
 
 
@@ -58,13 +66,18 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        $newPassword = Str::random(8); 
+        $newPassword = Str::random(8);
         $user->update([
-            'password' => Hash::make($newPassword), 
+            'password' => Hash::make($newPassword),
         ]);
 
         Mail::to($user->email)->send(new PasswordResetMail($user, $newPassword));
 
         return back()->with('success', 'A new password has been sent to your email address.');
+    }
+
+    public function h3ello()
+    {
+        return response()->json(['message' => 'Hello, are you confused?']);
     }
 }

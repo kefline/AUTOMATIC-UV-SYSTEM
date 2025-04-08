@@ -9,11 +9,13 @@
 	<meta name="author" content="">
 	<link rel="icon" href="https://solar-admin-template.multipurposethemes.com/bs5/images/favicon.ico">
 
-	<title>Solar Admin - Dashboard</title>
+	<title>Dashboard</title>
 
 	<link rel="stylesheet"
 		href="https://solar-admin-template.multipurposethemes.com/bs5/template/vertical/src/css/vendors_css.css">
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+	<!-- <link href="/assets/css/all.min.css" rel="stylesheet"> -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
 
 
 	<link rel="stylesheet" href="/assets/css/style.css">
@@ -138,7 +140,7 @@
 									</ul>
 								</li>
 								<li class="footer">
-									<a href="component_notification.html">View all</a>
+									<a href="#">View all</a>
 								</li>
 							</ul>
 						</li>
@@ -222,18 +224,16 @@
 									<span>Performance</span>
 								</a>
 							</li>
-							<li class="nav-item dropdown">
-								<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+							@if(auth()->check() && auth()->user()->role && auth()->user()->role->isAdmin())
+							<li>
+								<a href="{{route('users.add')}}">
 									<i data-feather="users"></i>
 									<span>User Management</span>
 								</a>
-								<ul class="dropdown-menu">
-									<li><a href="{{route('users.list')}}" class="dropdown-item">List  Users</a></li>
-									<li><a href="{{route('users.add')}}" class="dropdown-item">Add Users</a></li>
-								</ul>
 							</li>
-							</ul>
-						</div>
+							@endif
+						</ul>
+					</div>
 				</div>
 			</section>
 		</aside>
@@ -340,7 +340,8 @@
 													</div>
 													<div>
 														<p class="ms-10 mb-0">Max <span class="text-success">6.0</span>
-															<a href="#"><i class="fa-solid fa-sort-down"></i></a></p>
+															<a href="#"><i class="fa-solid fa-sort-down"></i></a>
+														</p>
 													</div>
 												</div>
 											</div>
@@ -358,8 +359,8 @@
 										</div>
 										<div class="col-lg-6 col-12">
 											<div>
-												<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/performance.png"
-													class="mb-5">
+												<img src="/assets/images/performance.png" class="mb-5">
+
 											</div>
 											<div>
 												<div class="box box-body mb-0" style="background-color: #eeeeee;">
@@ -399,13 +400,18 @@
 
 					</div>
 
+
 					<div class="row">
+						@if(auth()->check() && auth()->user()->isAdmin())
+						@php
+						$users = \App\Models\User::where('id', '!=', auth()->id())->paginate(10); // Paginate with 10 users per page
+						@endphp
 						<div class="col-xxl-7 col-xl-12 col-12">
 							<div class="box information">
 								<div class="box-header">
 									<h4 class="box-title">Users Information</h4>
 								</div>
-								<div class="box-body no-padding">
+								<div class="box-body"> {{-- Removed no-padding to accommodate pagination --}}
 									<div class="table-responsive">
 										<table class="table table-hover">
 											<tbody>
@@ -419,249 +425,71 @@
 															</label>
 														</div>
 													</th>
+													<th class="text-fade">Email</th>
+													<th class="text-fade">Role</th>
+													<th class="text-fade">Created At</th>
+													<th class="text-fade">Actions</th>
 													<th class="text-fade">Status</th>
-													<th class="text-fade">Engineers</th>
 													<th class="text-fade">Irradience</th>
 													<th class="text-fade">Energy</th>
 													<th class="text-fade">Battery</th>
 													<th class="text-fade">Temperature</th>
 
 												</tr>
+												@foreach($users as $user)
 												<tr>
 													<td>
 														<div class="form-check">
 															<input class="form-check-input" type="checkbox" value=""
-																id="flexCheckDefault1">
-															<label class="form-check-label" for="flexCheckDefault1">
-																AH-3x5
+																id="userCheckbox{{ $user->id }}">
+															<label class="form-check-label" for="userCheckbox{{ $user->id }}">
+																{{ $user->name }}
 															</label>
 														</div><a href="javascript:void(0)" class="text-primary"></a>
 													</td>
-													<td><span
-															class="badge badge-warning-light text-warning">Charging</span>
-													</td>
+													<td>{{ $user->email }}</td>
 													<td>
-														<div class="avatar-group m-0">
-															<div class="avatar bg-light w-25 h-25">
-																<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/8.jpg"
-																	class="avatar-sm" alt="Image">
-															</div>
-															<div class="avatar bg-light w-25 h-25">
-																<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/9.jpg"
-																	class="avatar-sm" alt="Image">
-															</div>
-															<div class="avatar bg-light w-25 h-25">
-																<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/10.jpg"
-																	class="avatar-sm" alt="Image">
-															</div>
-															<div class="l-h-26">
-																<span class="fs-10"> +4</span>
-															</div>
+														@if ($user->role)
+														{{ $user->role->name }}
+														@else
+														N/A
+														@endif
+													</td>
+													<td>{{ $user->created_at }}</td>
+													<td>
+														<div style="display: flex; align-items: center;">
+															<a href="" class="btn btn-sm btn-secondary mr-2" title="Edit User">
+																<i class="fas fa-edit"></i>
+															</a>
+															<form action="" method="POST" style="display: inline-block;">
+																@csrf
+																@method('DELETE')
+																<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this user?')">
+																	<i class="fas fa-trash-alt"></i>
+																</button>
+															</form>
 														</div>
 													</td>
-													<td>36.56</td>
-													<td>40.25Wh</td>
-													<td><i
-															class="fa-solid fa-battery-three-quarters text-primary fs-16"></i>
-														98%</td>
-													<td>35.9 C</td>
+													{{-- You'll need to replace these with actual data from your $user object or related models --}}
+													<td><span class="badge badge-warning-light text-warning">Pending</span></td>
+													<td>N/A</td>
+													<td>N/A</td>
+													<td><i class="fa-solid fa-battery-full text-primary fs-16"></i> N/A</td>
+													<td>N/A</td>
 												</tr>
-												<tr>
-													<td>
-														<div class="form-check">
-															<input class="form-check-input" type="checkbox" value=""
-																id="flexCheckDefault2">
-															<label class="form-check-label" for="flexCheckDefault2">
-																LO-5x7
-															</label>
-														</div><a href="javascript:void(0)" class="text-primary"></a>
-													</td>
-													<td><span
-															class="badge badge-primary-light text-primary">Active</span>
-													</td>
-													<td>
-														<div class="avatar-group m-0">
-															<div class="avatar bg-light w-25 h-25">
-																<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/5.jpg"
-																	class="avatar-sm" alt="Image">
-															</div>
-															<div class="avatar bg-light w-25 h-25">
-																<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/6.jpg"
-																	class="avatar-sm" alt="Image">
-															</div>
-															<div class="avatar bg-light w-25 h-25">
-																<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/7.jpg"
-																	class="avatar-sm" alt="Image">
-															</div>
-															<div class="l-h-26">
-																<span class="fs-10"> +6</span>
-															</div>
-														</div>
-													</td>
-													<td>12.36</td>
-													<td>59.47Wh</td>
-													<td><i class="fa-solid fa-battery-full text-primary fs-16"></i> 100%
-													</td>
-													<td>36.1 C</td>
-												</tr>
-												<tr>
-													<td>
-														<div class="form-check">
-															<input class="form-check-input" type="checkbox" value=""
-																id="flexCheckDefault3">
-															<label class="form-check-label" for="flexCheckDefault3">
-																DE-6x1
-															</label>
-														</div><a href="javascript:void(0)" class="text-primary"></a>
-													</td>
-													<td><span
-															class="badge badge-danger-light text-danger">Maintenance</span>
-													</td>
-													<td>
-														<div class="avatar-group m-0">
-															<div class="avatar bg-light w-25 h-25">
-																<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/1.jpg"
-																	class="avatar-sm" alt="Image">
-															</div>
-															<div class="avatar bg-light w-25 h-25">
-																<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/2.jpg"
-																	class="avatar-sm" alt="Image">
-															</div>
-															<div class="avatar bg-light w-25 h-25">
-																<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/3.jpg"
-																	class="avatar-sm" alt="Image">
-															</div>
-															<div class="l-h-26">
-																<span class="fs-10"> +3</span>
-															</div>
-														</div>
-													</td>
-													<td>158.36</td>
-													<td>25.97Wh</td>
-													<td><i class="fa-solid fa-battery-empty text-danger fs-16"></i> 0%
-													</td>
-													<td>38.5 C</td>
-												</tr>
-												<tr>
-													<td>
-														<div class="form-check">
-															<input class="form-check-input" type="checkbox" value=""
-																id="flexCheckDefault4">
-															<label class="form-check-label" for="flexCheckDefault4">
-																AH-8x5
-															</label>
-														</div><a href="javascript:void(0)" class="text-primary"></a>
-													</td>
-													<td><span
-															class="badge badge-primary-light text-primary">Active</span>
-													</td>
-													<td>
-														<div class="avatar-group m-0">
-															<div class="avatar bg-light w-25 h-25">
-																<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/8.jpg"
-																	class="avatar-sm" alt="Image">
-															</div>
-															<div class="avatar bg-light w-25 h-25">
-																<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/9.jpg"
-																	class="avatar-sm" alt="Image">
-															</div>
-															<div class="avatar bg-light w-25 h-25">
-																<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/4.jpg"
-																	class="avatar-sm" alt="Image">
-															</div>
-															<div class="l-h-26">
-																<span class="fs-10"> +4</span>
-															</div>
-														</div>
-													</td>
-													<td>80.23</td>
-													<td>64.37Wh</td>
-													<td><i
-															class="fa-solid fa-battery-three-quarters text-primary fs-16"></i>
-														94%</td>
-													<td>35.0 C</td>
-												</tr>
-												<tr>
-													<td>
-														<div class="form-check">
-															<input class="form-check-input" type="checkbox" value=""
-																id="flexCheckDefault5">
-															<label class="form-check-label" for="flexCheckDefault5">
-																HT-3x5
-															</label>
-														</div><a href="javascript:void(0)" class="text-primary"></a>
-													</td>
-													<td><span
-															class="badge badge-warning-light text-warning">Charging</span>
-													</td>
-													<td>
-														<div class="avatar-group m-0">
-															<div class="avatar bg-light w-25 h-25">
-																<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/5.jpg"
-																	class="avatar-sm" alt="Image">
-															</div>
-															<div class="avatar bg-light w-25 h-25">
-																<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/2.jpg"
-																	class="avatar-sm" alt="Image">
-															</div>
-															<div class="avatar bg-light w-25 h-25">
-																<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/10.jpg"
-																	class="avatar-sm" alt="Image">
-															</div>
-															<div class="l-h-26">
-																<span class="fs-10"> +2</span>
-															</div>
-														</div>
-													</td>
-													<td>58.36</td>
-													<td>40.25Wh</td>
-													<td><i class="fa-solid fa-battery-half text-warning"></i> 53%</td>
-													<td>37.4 C</td>
-												</tr>
-												<tr>
-													<td>
-														<div class="form-check">
-															<input class="form-check-input" type="checkbox" value=""
-																id="flexCheckDefault3">
-															<label class="form-check-label" for="flexCheckDefault3">
-																LO-5x1
-															</label>
-														</div><a href="javascript:void(0)" class="text-primary"></a>
-													</td>
-													<td><span
-															class="badge badge-primary-light text-primary">Active</span>
-													</td>
-													<td>
-														<div class="avatar-group m-0">
-															<div class="avatar bg-light w-25 h-25">
-																<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/8.jpg"
-																	class="avatar-sm" alt="Image">
-															</div>
-															<div class="avatar bg-light w-25 h-25">
-																<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/9.jpg"
-																	class="avatar-sm" alt="Image">
-															</div>
-															<div class="avatar bg-light w-25 h-25">
-																<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/10.jpg"
-																	class="avatar-sm" alt="Image">
-															</div>
-															<div class="l-h-26">
-																<span class="fs-10"> +4</span>
-															</div>
-														</div>
-													</td>
-													<td>18.36</td>
-													<td>18.78Wh</td>
-													<td><i class="fa-solid fa-battery-quarter text-danger fs-16"></i> 6%
-													</td>
-													<td>38.5 C</td>
-												</tr>
+												@endforeach
+
 											</tbody>
 										</table>
+									</div>
+									<div class="mt-4">
+										{{ $users->links() }} {{-- Render the pagination links --}}
 									</div>
 								</div>
 							</div>
 						</div>
+						@endif
+						@if(auth()->check() && auth()->user()->isAdmin())
 						<div class="col-xxl-5 col-xl-12 col-12">
 							<div class="box yield">
 								<div class="box-header d-flex justify-content-between align-items-center">
@@ -672,8 +500,6 @@
 												<a data-bs-toggle="dropdown" href="#" aria-expanded="false" class=""><i
 														class="ti-more-alt rotate-90 text-muted"></i></a>
 												<div class="dropdown-menu dropdown-menu-right">
-													<!-- i should add the style to ensure a  user chooses to see what kind of data yielded -->
-
 													<a class="dropdown-item active" href="#">Today</a>
 													<a class="dropdown-item" href="#">Yesterday</a>
 													<a class="dropdown-item" href="#">Monthly</a>
@@ -715,6 +541,59 @@
 								</div>
 							</div>
 						</div>
+						@else
+						<div class="col-xxl-12 col-xl-12 col-12">
+							<div class="box yield">
+								<div class="box-header d-flex justify-content-between align-items-center">
+									<h4 class="box-title">Yield Daily</h4>
+									<div>
+										<ul class="box-controls pull-right d-md-flex d-none">
+											<li class="dropdown">
+												<a data-bs-toggle="dropdown" href="#" aria-expanded="false" class=""><i
+														class="ti-more-alt rotate-90 text-muted"></i></a>
+												<div class="dropdown-menu dropdown-menu-right">
+													<a class="dropdown-item active" href="#">Today</a>
+													<a class="dropdown-item" href="#">Yesterday</a>
+													<a class="dropdown-item" href="#">Monthly</a>
+													<a class="dropdown-item" href="#">Last month</a>
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div class="box-body">
+									<div>
+										<div class="d-flex  justify-content-between align-items-center">
+											<p class="mb-0 text-fade"><span class="badge badge-md badge-dot"
+													style="background-color:#008ffb;"></span> Yield Energy</p>
+											<p class="mb-0 text-fade"><span class="badge badge-md badge-dot"
+													style="background-color:#00e396;"></span> Exported Energy</p>
+											<p class="mb-0 text-fade"><span class="badge badge-md badge-dot"
+													style="background-color:#feb019;"></span> Selfuse Energy</p>
+										</div>
+										<div class="d-flex  justify-content-between align-items-center">
+											<h3>17.6 <small>kwh</small></h3>
+											<h3>8.9 <small>kwh</small></h3>
+											<h3>12.87 <small>kwh</small></h3>
+										</div>
+									</div>
+									<div>
+										<div id="chart"></div>
+									</div>
+									<div>
+										<h6 class="fw-500">Battery Status</h6>
+										<div class="d-flex justify-content-between align-items-center">
+											<p class="text-fade mb-0">Load: <span class="text-dark fw-500">14%</span>
+											</p>
+											<p class="text-fade mb-0">Charge: <span class="text-dark fw-500">100%</span>
+											</p>
+											<p class="text-fade mb-0">Power <span class="text-dark-500">23.5 V<span></p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						@endif
 					</div>
 
 				</section>
@@ -730,7 +609,9 @@
 				</ul>
 			</div>
 			&copy;
-			<script>document.write(new Date().getFullYear())</script>
+			<script>
+				document.write(new Date().getFullYear())
+			</script>
 		</footer>
 
 		<div class="modal modal-right fade" id="quick_user_toggle" tabindex="-1">
@@ -801,12 +682,12 @@
 								</div>
 								<div class="d-flex flex-column fw-500">
 									<form action="{{ route('logout') }}" method="POST">
-										@csrf  
+										@csrf
 										<button type="submit" class="text-dark hover-info mb-1 fs-16 btn btn-link">Logout</button>
 									</form>
 								</div>
 							</div>
-							
+
 
 						</div>
 						<div class="dropdown-divider my-30"></div>

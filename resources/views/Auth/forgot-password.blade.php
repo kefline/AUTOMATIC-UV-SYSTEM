@@ -8,11 +8,11 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Solar Admin - Log in </title>
+    <title>Log in </title>
 
     <link rel="stylesheet"
         href="https://solar-admin-template.multipurposethemes.com/bs5/template/vertical/src/css/vendors_css.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="/assets/css/all.min.css" rel="stylesheet">
 
 
     <link rel="stylesheet" href="/assets/css/style.css">
@@ -36,13 +36,13 @@
                             </div>
                             <div class="p-40">
                                 @if ($errors->any())
-                                    <div class="alert alert-danger">
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                                 @endif
                                 @include('_message')
                                 <form action="{{ route('password.email') }}" method="POST">
@@ -52,7 +52,16 @@
                                         <input type="email" id="email" name="email" class="form-control"
                                             placeholder="Enter your email" required>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Sending Password Reset Link</button>
+                                    <div class="row">
+
+                                    </div>
+                                    <div class="d-flex gap-2" >
+                                    <a href="{{ route('Auth.login') }}" class="btn btn-secondary">Back</a>
+
+                                        <button type="submit" class="btn btn-primary">Sending Password Reset Link</button>
+                                    </div>
+
+
                                 </form>
 
 
