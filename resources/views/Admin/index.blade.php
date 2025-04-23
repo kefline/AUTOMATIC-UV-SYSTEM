@@ -31,25 +31,8 @@
 		<div id="loader"></div>
 
 		<header class="main-header">
-			<div class="d-flex align-items-center logo-box justify-content-start">
-				<a href="index.html" class="logo">
-					<div class="logo-mini w-40">
-						<span class="light-logo"><img
-								src="https://solar-admin-template.multipurposethemes.com/bs5/images/logo-letter.png"
-								alt="logo"></span>
-						<span class="dark-logo"><img
-								src="https://solar-admin-template.multipurposethemes.com/bs5/images/logo-white-letter.png"
-								alt="logo"></span>
-					</div>
-					<div class="logo-lg">
-						<span class="light-logo"><img
-								src="https://solar-admin-template.multipurposethemes.com/bs5/images/logo-light-text.png"
-								alt="logo"></span>
-						<span class="dark-logo"><img
-								src="https://solar-admin-template.multipurposethemes.com/bs5/images/logo-text.png"
-								alt="logo"></span>
-					</div>
-				</a>
+			<div class="d-flex align-items-center logo-box justify-content-end">
+				<img src="/assets/images/logomax.jpg" alt="" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover;">
 			</div>
 			<nav class="navbar navbar-static-top">
 				<div class="app-menu">
@@ -255,7 +238,7 @@
 												<p><span class="badge badge-md badge-dot ms-5"
 														style="background-color:#ff9920;"></span> Low</p>
 											</div>
-											<h2 class="fw-600 mb-0">60%</h2>
+											<h2 class="fw-600 mb-0" id="solar-efficiency">--</h2>
 										</div>
 									</div>
 									<div class="col-5">
@@ -280,7 +263,7 @@
 												<p><span class="badge badge-md badge-dot ms-5"
 														style="background-color:#ff9920;"></span> Low</p>
 											</div>
-											<h2 class="fw-600 mb-0">6.5 Kw</h2>
+											<h2 class="fw-600 mb-0" id="power-generation">--</h2>
 										</div>
 									</div>
 									<div class="col-5">
@@ -305,7 +288,7 @@
 												<p><span class="badge badge-md badge-dot ms-5"
 														style="background-color:#ff9920;"></span> Low</p>
 											</div>
-											<h2 class="fw-600 mb-0">12 KWh</h2>
+											<h2 class="fw-600 mb-0" id="energy-consumed">--</h2>
 										</div>
 									</div>
 									<div class="col-5">
@@ -332,14 +315,14 @@
 											<div>
 												<p class="mb-2"><span class="badge badge-dot bg-success"></span> Total
 													Charging</p>
-												<h1 class="mb-2 mt-0">80.88</h1>
+												<h1 class="mb-2 mt-0" id="total-charging"></h1>
 												<div class="d-flex align-items-center">
 													<div>
-														<p class="mb-0">Min <span class="text-danger">3.0</span> <a
+														<p class="mb-0">Min <span class="text-danger" id="min-charging"></span> <a
 																href="#"><i class="fa-solid fa-sort-down"></i></a></p>
 													</div>
 													<div>
-														<p class="ms-10 mb-0">Max <span class="text-success">6.0</span>
+														<p class="ms-10 mb-0">Max <span class="text-success" id="max-charging"></span>
 															<a href="#"><i class="fa-solid fa-sort-down"></i></a>
 														</p>
 													</div>
@@ -349,9 +332,9 @@
 											<div>
 												<p class="mb-2"><span class="badge badge-dot bg-warning"></span> Power
 													Usage</p>
-												<h1 class="mt-0 mb-2">12.35</h1>
+												<h1 class="mt-0 mb-2" id="power-usage"></h1>
 												<div>
-													<p class="mb-0">1 Hour usage <span class="fw-bold">6.8</span> kwh
+													<p class="mb-0">1 Hour usage <span class="fw-bold" id="one-hour-usage"></span> kwh
 													</p>
 												</div>
 											</div>
@@ -359,7 +342,7 @@
 										</div>
 										<div class="col-lg-6 col-12">
 											<div>
-												<img src="/assets/images/performance.png" class="mb-5">
+												<img src="/assets/images/performance.png" class="mb-5" alt="Performance Image">
 
 											</div>
 											<div>
@@ -368,12 +351,11 @@
 														<div class="col-6">
 															<div class="d-flex align-items-center">
 																<div>
-																	<i
-																		class="fa-solid fa-battery-full text-success"></i>
+																	<i class="fa-solid fa-battery-full text-success"></i>
 																</div>
 																<div class="mx-10">
 																	<p class="mb-0 text-black">Capacity</p>
-																	<h5 class="mb-0 text-black">210 kwh</h5>
+																	<h5 class="mb-0 text-black" id="total-capacity"></h5>
 																</div>
 															</div>
 														</div>
@@ -384,7 +366,7 @@
 																</div>
 																<div class="mx-10">
 																	<p class="mb-0 text-black">Yield</p>
-																	<h5 class="mb-0 text-black">178 kwh</h5>
+																	<h5 class="mb-0 text-black" id="yield"></h5>
 																</div>
 															</div>
 														</div>
@@ -602,11 +584,7 @@
 
 		<footer class="main-footer bt-1">
 			<div class="pull-right d-none d-sm-inline-block">
-				<ul class="nav nav-primary nav-dotted nav-dot-separated justify-content-center justify-content-md-end">
-					<li class="nav-item">
-						<a class="nav-link" href="#" target="_blank">Purchase Now</a>
-					</li>
-				</ul>
+				
 			</div>
 			&copy;
 			<script>
@@ -618,14 +596,7 @@
 			<div class="modal-dialog">
 				<div class="modal-content slim-scroll3">
 					<div class="modal-body p-30 bg-white">
-						<div class="d-flex align-items-center mb-15 justify-content-between pb-30">
-							<h4 class="m-0">User Profile
-								<small class="text-fade fs-12 ms-5">12 messages</small>
-							</h4>
-							<a href="#" class="btn btn-icon btn-danger-light btn-sm no-shadow" data-bs-dismiss="modal">
-								<span class="fa fa-close"></span>
-							</a>
-						</div>
+						
 						<div>
 							<div class="d-flex flex-row">
 								<div class=""><img
@@ -638,44 +609,15 @@
 											class="icon-Mail-notification me-5 text-success"><span
 												class="path1"></span><span class="path2"></span></span>
 										dummy@gmail.com</a>
-									<button class="btn btn-success-light btn-sm mt-5"><i class="ti-plus"></i>
-										Follow</button>
+									
 								</div>
 							</div>
 						</div>
 						<div class="dropdown-divider my-30"></div>
 						<div>
-							<div class="d-flex align-items-center mb-30">
-								<div class="me-15 bg-primary-light h-50 w-50 l-h-60 rounded text-center">
-									<span class="icon-Library fs-24"><span class="path1"></span><span
-											class="path2"></span></span>
-								</div>
-								<div class="d-flex flex-column fw-500">
-									<a href="extra_profile.html" class="text-dark hover-primary mb-1 fs-16">My
-										Profile</a>
-									<span class="text-fade">Account settings and more</span>
-								</div>
-							</div>
-							<div class="d-flex align-items-center mb-30">
-								<div class="me-15 bg-danger-light h-50 w-50 l-h-60 rounded text-center">
-									<span class="icon-Write fs-24"><span class="path1"></span><span
-											class="path2"></span></span>
-								</div>
-								<div class="d-flex flex-column fw-500">
-									<a href="mailbox.html" class="text-dark hover-danger mb-1 fs-16">My Messages</a>
-									<span class="text-fade">Inbox and tasks</span>
-								</div>
-							</div>
-							<div class="d-flex align-items-center mb-30">
-								<div class="me-15 bg-success-light h-50 w-50 l-h-60 rounded text-center">
-									<span class="icon-Group-chat fs-24"><span class="path1"></span><span
-											class="path2"></span></span>
-								</div>
-								<div class="d-flex flex-column fw-500">
-									<a href="setting.html" class="text-dark hover-success mb-1 fs-16">Settings</a>
-									<span class="text-fade">Accout Settings</span>
-								</div>
-							</div>
+						
+						
+						
 							<div class="d-flex align-items-center mb-30">
 								<div class="me-15 bg-info-light h-50 w-50 l-h-60 rounded text-center">
 									<span class="icon-Attachment1 fs-24"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></span>
@@ -701,7 +643,7 @@
 
 
 
-		<div id="chat-box-body">
+		<!-- <div id="chat-box-body">
 			<div id="chat-circle" class="waves-effect waves-circle btn btn-circle btn-sm btn-warning l-h-50">
 				<div id="chat-overlay"></div>
 				<span class="icon-Group-chat fs-18"><span class="path1"></span><span class="path2"></span></span>
@@ -823,7 +765,32 @@
 					</form>
 				</div>
 			</div>
-		</div>
+		</div> -->
+		
+
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				fetch('/api/dashboard')
+					.then(response => response.json())
+					.then(data => {
+						document.getElementById('solar-efficiency').textContent = data.solar_efficiency + '%';
+						document.getElementById('power-generation').textContent = data.power_generation + ' Kw';
+						document.getElementById('energy-consumed').textContent = data.energy_consumed + ' KWh';
+						document.getElementById('total-charging').textContent = data.total_charging;
+						document.getElementById('min-charging').textContent = data.min_charging;
+						document.getElementById('max-charging').textContent = data.max_charging;
+						document.getElementById('power-usage').textContent = data.power_usage;
+						document.getElementById('one-hour-usage').textContent = data.one_hour_usage + ' kwh';
+						document.getElementById('total-capacity').textContent = data.total_capacity + ' kwh';
+						document.getElementById('yield').textContent = data.yield + ' kwh';
+					})
+					.catch(error => {
+						console.error('Error fetching dashboard data:', error);
+					});
+			});
+		</script>
+
+
 
 
 		<script src="https://code.jquery.com/jquery-3.7.1.js"
@@ -851,6 +818,8 @@
 		<script src="/assets/js/dashboard.js"></script>
 		<script src="/assets/js/slider.js"></script>
 		<script src="/assets/js/range-sliders.init.js"></script>
+
+
 
 
 
