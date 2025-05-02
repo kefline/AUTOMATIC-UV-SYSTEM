@@ -224,82 +224,72 @@
 			<div class="container-full">
 				<section class="content">
 					<div class="row">
-						<div class="col-xxl-4 col-xl-6 col-lg-6 col-12 ">
+						<div class="col-xxl-4 col-xl-6 col-lg-6 col-12">
 							<div class="box box-body pull-up">
 								<div class="row">
 									<div class="col-7">
 										<div>
-											<h4 class="fw-500">Solar Efficiency</h4>
-											<div class="d-flex  align-items-center">
-												<p><span class="badge badge-md badge-dot"
-														style="background-color:#fc696a;"></span> High</p>
-												<p><span class="badge badge-md badge-dot ms-5"
-														style="background-color:#51ce8a;"></span> Moderate</p>
-												<p><span class="badge badge-md badge-dot ms-5"
-														style="background-color:#ff9920;"></span> Low</p>
+											<h4 class="fw-500">System Efficiency</h4>
+											<div class="d-flex align-items-center">
+												<p><span class="badge badge-md badge-dot" style="background-color:#fc696a;"></span> High</p>
+												<p><span class="badge badge-md badge-dot ms-5" style="background-color:#51ce8a;"></span> Moderate</p>
+												<p><span class="badge badge-md badge-dot ms-5" style="background-color:#ff9920;"></span> Low</p>
 											</div>
-											<h2 class="fw-600 mb-0" id="solar-efficiency">--</h2>
+											<h2 class="fw-600 mb-0" id="system-efficiency">--</h2>
 										</div>
 									</div>
 									<div class="col-5">
 										<div>
-											<div id="chart-container" class="mb-0"></div>
+											<div id="efficiency-chart" class="mb-0"></div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="col-xxl-4 col-xl-6 col-lg-6 col-12 ">
+						<div class="col-xxl-4 col-xl-6 col-lg-6 col-12">
 							<div class="box box-body pull-up">
 								<div class="row">
 									<div class="col-7">
 										<div>
 											<h4 class="fw-500">Power Generation</h4>
-											<div class="d-flex  align-items-center">
-												<p><span class="badge badge-md badge-dot"
-														style="background-color:#fc696a;"></span> High</p>
-												<p><span class="badge badge-md badge-dot ms-5"
-														style="background-color:#51ce8a;"></span> Moderate</p>
-												<p><span class="badge badge-md badge-dot ms-5"
-														style="background-color:#ff9920;"></span> Low</p>
+											<div class="d-flex align-items-center">
+												<p><span class="badge badge-md badge-dot" style="background-color:#fc696a;"></span> High</p>
+												<p><span class="badge badge-md badge-dot ms-5" style="background-color:#51ce8a;"></span> Moderate</p>
+												<p><span class="badge badge-md badge-dot ms-5" style="background-color:#ff9920;"></span> Low</p>
 											</div>
 											<h2 class="fw-600 mb-0" id="power-generation">--</h2>
 										</div>
 									</div>
 									<div class="col-5">
 										<div>
-											<div id="chart-conta" class="mb-0"></div>
+											<div id="generation-chart" class="mb-0"></div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="col-xxl-4 col-xl-12 col-lg-12 col-12 ">
+						<div class="col-xxl-4 col-xl-12 col-lg-12 col-12">
 							<div class="box box-body pull-up">
 								<div class="row">
 									<div class="col-7">
 										<div>
 											<h4 class="fw-500">Energy Consumed</h4>
-											<div class="d-flex  align-items-center">
-												<p><span class="badge badge-md badge-dot"
-														style="background-color:#fc696a;"></span> High</p>
-												<p><span class="badge badge-md badge-dot ms-5"
-														style="background-color:#51ce8a;"></span> Moderate</p>
-												<p><span class="badge badge-md badge-dot ms-5"
-														style="background-color:#ff9920;"></span> Low</p>
+											<div class="d-flex align-items-center">
+												<p><span class="badge badge-md badge-dot" style="background-color:#fc696a;"></span> High</p>
+												<p><span class="badge badge-md badge-dot ms-5" style="background-color:#51ce8a;"></span> Moderate</p>
+												<p><span class="badge badge-md badge-dot ms-5" style="background-color:#ff9920;"></span> Low</p>
 											</div>
 											<h2 class="fw-600 mb-0" id="energy-consumed">--</h2>
 										</div>
 									</div>
 									<div class="col-5">
 										<div>
-											<div id="chart-contain" class="mb-0"></div>
+											<div id="consumption-chart" class="mb-0"></div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-
 					</div>
 					<div class="row">
 						<div class="col-xxl-12 col-xl-12 col-12">
@@ -313,159 +303,219 @@
 									<div class="row">
 										<div class="col-lg-6 col-12">
 											<div>
-												<p class="mb-2"><span class="badge badge-dot bg-success"></span> Total
-													Charging</p>
-												<h1 class="mb-2 mt-0" id="total-charging"></h1>
+												<p class="mb-2"><span class="badge badge-dot bg-success"></span> Total Charging</p>
+												<h1 class="mb-2 mt-0" id="total-charging">--</h1>
 												<div class="d-flex align-items-center">
 													<div>
-														<p class="mb-0">Min <span class="text-danger" id="min-charging"></span> <a
-																href="#"><i class="fa-solid fa-sort-down"></i></a></p>
+														<p class="mb-0">Min <span class="text-danger" id="min-charging">--</span> <a href="#"><i class="fa-solid fa-sort-down"></i></a></p>
 													</div>
 													<div>
-														<p class="ms-10 mb-0">Max <span class="text-success" id="max-charging"></span>
-															<a href="#"><i class="fa-solid fa-sort-down"></i></a>
-														</p>
+														<p class="ms-10 mb-0">Max <span class="text-success" id="max-charging">--</span> <a href="#"><i class="fa-solid fa-sort-down"></i></a></p>
 													</div>
 												</div>
 											</div>
 											<hr class="my-35">
 											<div>
-												<p class="mb-2"><span class="badge badge-dot bg-warning"></span> Power
-													Usage</p>
-												<h1 class="mt-0 mb-2" id="power-usage"></h1>
+												<p class="mb-2"><span class="badge badge-dot bg-warning"></span> Power Usage</p>
+												<h1 class="mt-0 mb-2" id="power-usage">--</h1>
 												<div>
-													<p class="mb-0">1 Hour usage <span class="fw-bold" id="one-hour-usage"></span> kwh
-													</p>
+													<p class="mb-0">1 Hour usage <span class="fw-bold" id="one-hour-usage">--</span> kWh</p>
 												</div>
 											</div>
-
 										</div>
 										<div class="col-lg-6 col-12">
 											<div>
 												<img src="/assets/images/performance.png" class="mb-5" alt="Performance Image">
-
 											</div>
 											<div>
-												<div class="box box-body mb-0" style="background-color: #eeeeee;">
+												<div class="box box-body mb-0" style="background-color: #eeeeee; padding: 15px; border-radius: 5px;">
 													<div class="row">
-														<div class="col-6">
+														<div class="col-3">
 															<div class="d-flex align-items-center">
 																<div>
 																	<i class="fa-solid fa-battery-full text-success"></i>
 																</div>
 																<div class="mx-10">
 																	<p class="mb-0 text-black">Capacity</p>
-																	<h5 class="mb-0 text-black" id="total-capacity"></h5>
+																	<h5 class="mb-0 text-black" id="total-capacity">--</h5>
 																</div>
 															</div>
 														</div>
-														<div class="col-6">
+														<div class="col-3">
 															<div class="d-flex align-items-center">
 																<div>
 																	<i class="fa-solid fa-solar-panel text-success"></i>
 																</div>
 																<div class="mx-10">
 																	<p class="mb-0 text-black">Yield</p>
-																	<h5 class="mb-0 text-black" id="yield"></h5>
+																	<h5 class="mb-0 text-black" id="yield">--</h5>
+																</div>
+															</div>
+														</div>
+														<div class="col-3">
+															<div class="d-flex align-items-center">
+																<div>
+																	<i class="fa-solid fa-circle-check text-success"></i>
+																</div>
+																<div class="mx-10">
+																	<p class="mb-0 text-black">Status</p>
+																	<h5 class="mb-0 text-black" id="panel-status">--</h5>
+																</div>
+															</div>
+														</div>
+														<div class="col-3">
+															<div class="d-flex align-items-center">
+																<div>
+																	<i class="fa-solid fa-ruler-vertical text-success"></i>
+																</div>
+																<div class="mx-10">
+																	<p class="mb-0 text-black">Angle</p>
+																	<h5 class="mb-0 text-black" id="panel-angle">--</h5>
 																</div>
 															</div>
 														</div>
 													</div>
 												</div>
 											</div>
-
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-
 					</div>
 
 
 					<div class="row">
 						@if(auth()->check() && auth()->user()->isAdmin())
 						@php
-						$users = \App\Models\User::where('id', '!=', auth()->id())->paginate(10); // Paginate with 10 users per page
+						$search = request()->query('search', '');
+						$query = \App\Models\User::where('id', '!=', auth()->id());
+
+						if($search) {
+						$query->where(function($q) use ($search) {
+						$q->where('name', 'like', "%{$search}%")
+						->orWhere('email', 'like', "%{$search}%");
+						});
+						}
+
+						$users = $query->paginate(4)->appends(['search' => $search]);
 						@endphp
 						<div class="col-xxl-7 col-xl-12 col-12">
-							<div class="box information">
-								<div class="box-header">
-									<h4 class="box-title">Users Information</h4>
+							<div class="box">
+								<div class="box-header with-border">
+									<div class="d-flex justify-content-between align-items-center">
+										<h4 class="box-title">Users Information</h4>
+										<div class="box-controls">
+											<form action="" method="GET">
+												<div class="input-group input-search-light">
+													<input type="search" class="form-control" name="search" placeholder="Search users..."
+														value="{{ $search }}" aria-label="Search">
+													<button type="submit" class="input-group-text">
+														<i class="fa fa-search"></i>
+													</button>
+												</div>
+											</form>
+										</div>
+									</div>
 								</div>
-								<div class="box-body"> {{-- Removed no-padding to accommodate pagination --}}
-									<div class="table-responsive">
-										<table class="table table-hover">
-											<tbody>
+								<div class="box-body">
+									<div class="table-responsive-lg">
+										<table class="table table-hover table-striped">
+											<thead>
 												<tr>
-													<th style="padding:0px 19px;">
+													<th>
 														<div class="form-check">
-															<input class="form-check-input" type="checkbox" value=""
-																id="flexCheckDefault">
-															<label class="form-check-label" for="flexCheckDefault">
-																<span class="text-fade">Users</span>
-															</label>
+															<input class="form-check-input" type="checkbox" id="selectAll">
+															<label class="form-check-label" for="selectAll">User</label>
 														</div>
 													</th>
-													<th class="text-fade">Email</th>
-													<th class="text-fade">Role</th>
-													<th class="text-fade">Created At</th>
-													<th class="text-fade">Actions</th>
-													<th class="text-fade">Status</th>
-													<th class="text-fade">Irradience</th>
-													<th class="text-fade">Energy</th>
-													<th class="text-fade">Battery</th>
-													<th class="text-fade">Temperature</th>
-
+													<th>Email</th>
+													<th>Role</th>
+													<th>Created</th>
+													<th>Status</th>
+													<th>Actions</th>
 												</tr>
+											</thead>
+											<tbody>
+												@if($users->count() > 0)
 												@foreach($users as $user)
 												<tr>
 													<td>
-														<div class="form-check">
-															<input class="form-check-input" type="checkbox" value=""
-																id="userCheckbox{{ $user->id }}">
-															<label class="form-check-label" for="userCheckbox{{ $user->id }}">
-																{{ $user->name }}
-															</label>
-														</div><a href="javascript:void(0)" class="text-primary"></a>
+														<div class="d-flex align-items-center">
+															<div class="form-check me-2">
+																<input class="form-check-input" type="checkbox" id="userCheckbox{{ $user->id }}">
+															</div>
+															<div class="avatar avatar-lg">
+																<span class="avatar-initial rounded-circle bg-primary">{{ substr($user->name, 0, 1) }}</span>
+															</div>
+															<div class="ms-2">
+																<h5 class="mb-0">{{ $user->name }}</h5>
+															</div>
+														</div>
 													</td>
 													<td>{{ $user->email }}</td>
 													<td>
 														@if ($user->role)
-														{{ $user->role->name }}
+														<span class="badge bg-light-primary text-primary">{{ $user->role->name }}</span>
 														@else
-														N/A
+														<span class="badge bg-light-secondary">N/A</span>
 														@endif
 													</td>
-													<td>{{ $user->created_at }}</td>
+													<td>{{ $user->created_at->format('M d, Y') }}</td>
 													<td>
-														<div style="display: flex; align-items: center;">
-															<a href="" class="btn btn-sm btn-secondary mr-2" title="Edit User">
+														@if($user->id == auth()->id() || $user->is_online)
+														<span class="badge bg-light-success text-success">Active</span>
+														@else
+														<span class="badge bg-light-danger text-danger">Inactive</span>
+														@endif
+													</td>
+
+													<td>
+														<div class="d-flex">
+															<a href="" class="btn btn-icon btn-sm btn-light-primary me-1" data-bs-toggle="tooltip" title="Edit User">
 																<i class="fas fa-edit"></i>
 															</a>
-															<form action="" method="POST" style="display: inline-block;">
+															<form action="" method="POST">
 																@csrf
 																@method('DELETE')
-																<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this user?')">
-																	<i class="fas fa-trash-alt"></i>
+																<button type="submit" class="btn btn-icon btn-sm btn-light-danger" data-bs-toggle="tooltip" title="Delete User" onclick="return confirm('Are you sure?')">
+																	<i class="fas fa-trash"></i>
 																</button>
 															</form>
 														</div>
 													</td>
-													{{-- You'll need to replace these with actual data from your $user object or related models --}}
-													<td><span class="badge badge-warning-light text-warning">Pending</span></td>
-													<td>N/A</td>
-													<td>N/A</td>
-													<td><i class="fa-solid fa-battery-full text-primary fs-16"></i> N/A</td>
-													<td>N/A</td>
 												</tr>
 												@endforeach
-
+												@else
+												<tr>
+													<td colspan="6" class="text-center py-4">
+														<div class="d-flex flex-column align-items-center">
+															<i class="fas fa-search fa-3x text-muted mb-3"></i>
+															<h5 class="mb-1">No users found</h5>
+															<p class="text-muted">Try adjusting your search to find what you're looking for.</p>
+															@if($search)
+															<a href="{{ url()->current() }}" class="btn btn-sm btn-outline-primary mt-2">
+																<i class="fas fa-times me-1"></i> Clear search
+															</a>
+															@endif
+														</div>
+													</td>
+												</tr>
+												@endif
 											</tbody>
 										</table>
 									</div>
-									<div class="mt-4">
-										{{ $users->links() }} {{-- Render the pagination links --}}
+									<div class="d-flex justify-content-between align-items-center mt-3">
+										<div class="text-muted">
+											@if($users->total() > 0)
+											Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of {{ $users->total() }} users
+											@else
+											No users found
+											@endif
+										</div>
+										<div>
+											{{ $users->links('pagination::bootstrap-5') }}
+										</div>
 									</div>
 								</div>
 							</div>
@@ -576,6 +626,8 @@
 							</div>
 						</div>
 						@endif
+
+
 					</div>
 
 				</section>
@@ -584,7 +636,7 @@
 
 		<footer class="main-footer bt-1">
 			<div class="pull-right d-none d-sm-inline-block">
-				
+
 			</div>
 			&copy;
 			<script>
@@ -596,7 +648,7 @@
 			<div class="modal-dialog">
 				<div class="modal-content slim-scroll3">
 					<div class="modal-body p-30 bg-white">
-						
+
 						<div>
 							<div class="d-flex flex-row">
 								<div class=""><img
@@ -609,15 +661,15 @@
 											class="icon-Mail-notification me-5 text-success"><span
 												class="path1"></span><span class="path2"></span></span>
 										dummy@gmail.com</a>
-									
+
 								</div>
 							</div>
 						</div>
 						<div class="dropdown-divider my-30"></div>
 						<div>
-						
-						
-						
+
+
+
 							<div class="d-flex align-items-center mb-30">
 								<div class="me-15 bg-info-light h-50 w-50 l-h-60 rounded text-center">
 									<span class="icon-Attachment1 fs-24"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></span>
@@ -766,29 +818,58 @@
 				</div>
 			</div>
 		</div> -->
-		
+
 
 		<script>
 			document.addEventListener('DOMContentLoaded', function() {
-				fetch('/api/dashboard')
-					.then(response => response.json())
-					.then(data => {
-						document.getElementById('solar-efficiency').textContent = data.solar_efficiency + '%';
-						document.getElementById('power-generation').textContent = data.power_generation + ' Kw';
-						document.getElementById('energy-consumed').textContent = data.energy_consumed + ' KWh';
-						document.getElementById('total-charging').textContent = data.total_charging;
-						document.getElementById('min-charging').textContent = data.min_charging;
-						document.getElementById('max-charging').textContent = data.max_charging;
-						document.getElementById('power-usage').textContent = data.power_usage;
-						document.getElementById('one-hour-usage').textContent = data.one_hour_usage + ' kwh';
-						document.getElementById('total-capacity').textContent = data.total_capacity + ' kwh';
-						document.getElementById('yield').textContent = data.yield + ' kwh';
-					})
-					.catch(error => {
-						console.error('Error fetching dashboard data:', error);
-					});
+				function fetchDashboardData() {
+					fetch('/api/system/dashboard')
+						.then(response => {
+							if (!response.ok) {
+								throw new Error('Network response was not ok');
+							}
+							return response.json();
+						})
+						.then(data => {
+							// System Status
+							document.getElementById('system-efficiency').textContent = data.system_status.overall_efficiency + '%';
+							document.getElementById('power-generation').textContent = (data.system_status.current_production / 1000).toFixed(2) + ' kW';
+							document.getElementById('energy-consumed').textContent = (data.system_status.current_consumption / 1000).toFixed(2) + ' kWh';
+							document.getElementById('total-charging').textContent = data.system_status.total_charging + ' kWh';
+							document.getElementById('min-charging').textContent = data.system_status.min_charging + ' kWh';
+							document.getElementById('max-charging').textContent = data.system_status.max_charging + ' kWh';
+							document.getElementById('power-usage').textContent = data.system_status.power_usage + ' kWh';
+							document.getElementById('one-hour-usage').textContent = data.system_status.one_hour_usage + ' kWh';
+							document.getElementById('total-capacity').textContent = (data.system_status.total_capacity / 1000).toFixed(2) + ' kWh';
+							document.getElementById('yield').textContent = data.system_status.yield + ' kWh';
+
+							// Panel Status
+							document.getElementById('panel-status').textContent = data.panel_status.status;
+							document.getElementById('panel-angle').textContent = data.panel_status.current_angle + '°';
+						})
+						.catch(error => {
+							console.error('Error fetching dashboard data:', error);
+							// Display fallback values or error message
+							const elements = [
+								'system-efficiency', 'power-generation', 'energy-consumed',
+								'total-charging', 'min-charging', 'max-charging',
+								'power-usage', 'one-hour-usage', 'total-capacity',
+								'yield', 'panel-status', 'panel-angle'
+							];
+							elements.forEach(id => {
+								document.getElementById(id).textContent = 'Error';
+							});
+						});
+				}
+
+				// Initial fetch
+				fetchDashboardData();
+
+				// Fetch every 5 seconds
+				setInterval(fetchDashboardData, 5000);
 			});
 		</script>
+
 
 
 

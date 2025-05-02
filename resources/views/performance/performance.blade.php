@@ -28,17 +28,9 @@
 		<div id="loader"></div>
 
 		<header class="main-header">
-			<div class="d-flex align-items-center logo-box justify-content-start">
-				<a href="index.html" class="logo">
-					<div class="logo-mini w-40">
-						<span class="light-logo"><img src="https://solar-admin-template.multipurposethemes.com/bs5/images/logo-letter.png" alt="logo"></span>
-						<span class="dark-logo"><img src="https://solar-admin-template.multipurposethemes.com/bs5/images/logo-white-letter.png" alt="logo"></span>
-					</div>
-					<div class="logo-lg">
-						<span class="light-logo"><img src="https://solar-admin-template.multipurposethemes.com/bs5/images/logo-light-text.png" alt="logo"></span>
-						<span class="dark-logo"><img src="https://solar-admin-template.multipurposethemes.com/bs5/images/logo-text.png" alt="logo"></span>
-					</div>
-				</a>
+			<div class="d-flex align-items-center logo-box justify-content-end">
+				<img src="/assets/images/logomax.jpg" alt="" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover;">
+
 			</div>
 			<nav class="navbar navbar-static-top">
 				<div class="app-menu">
@@ -199,194 +191,106 @@
 				</div>
 			</section>
 		</aside>
-		<!-- Content Wrapper. Contains page content -->
+
+
 		<div class="content-wrapper">
 			<div class="container-full">
-				<!-- Main content -->
 				<section class="content">
 					<div class="row">
-						<div class="col-xxl-4 col-xl-8 col-lg-8 col-12 ">
+						<div class="col-xxl-6 col-xl-8 col-lg-8 col-12">
 							<div class="box box-body pull-up solar">
 								<div class="d-flex justify-content-around align-items-center">
 									<div>
-										<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/solar-power.png" class="w-160 h-160">
+										<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/solar-power.png" class="w-160 h-160" alt="Solar Power">
 									</div>
 									<div class="mx-20">
 										<h4>Solar Production</h4>
-										<h1 class="mb-2">168 <span class="fs-20">kwh<span></h1>
+										<h1 id="solar-production" class="mb-2">Loading...</h1>
+										<span class="fs-20">kWh</span>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="col-xxl-2 col-xl-4 col-lg-4">
-							<div class=" col-12">
-								<div class="box box-body pull-up p-20">
-									<div class="d-flex justify-content-start align-items-center">
-										<div class="m-0">
-											<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/charge.png" class="w-40 h-40">
-										</div>
-										<div class="ms-15">
-											<p class="mb-0">Consumed</p>
-											<h2 class="my-0">49 <small>kwh</small></h2>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-12">
-								<div class="box box-body pull-up p-20">
-									<div class="d-flex justify-content-start align-items-center">
-										<div>
-											<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/save-money.png" class="w-50 h-50">
-										</div>
-										<div class="ms-10">
-											<p class="mb-0">Earnings</p>
-											<h2 class="my-0">36 <small>$</small></h2>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-xxl-2 col-xl-4 col-lg-4">
-							<div class="box box-body pull-up">
-								<center class="my-1">
-									<div>
-										<p class="mb-5">Export to grid</p>
-										<h2 class="my-0">21 <small class="text-fade">kwh</small></h2>
-									</div>
-									<hr class="my-20">
-									<div>
-										<p class="mb-5">Import from grid</p>
-										<h2 class="my-0">89 <small class="text-fade">kwh</small></h2>
-									</div>
-								</center>
-							</div>
-						</div>
-						<div class="col-xxl-4 col-xl-8 col-lg-8 col-12 ">
+
+						<div class="col-xxl-6 col-xl-8 col-lg-8 col-12">
 							<div class="box box-body pull-up battery">
 								<div class="d-flex justify-content-around align-items-center">
 									<div>
-										<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/battery (3).png" class="w-160 h-160">
+										<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/battery (3).png" class="w-160 h-160" alt="Battery">
 									</div>
 									<div>
 										<h4 class="text-success">Charged</h4>
-										<h2 class="text-success">75 <small class="text-fade">kwh</small></h2>
+										<h2 id="battery-charged" class="text-success">Loading...</h2>
+										<small class="text-fade">kWh</small>
 									</div>
 									<div class="ms-5">
 										<h4 class="text-danger">Discharged</h4>
-										<h2 class="text-danger">25 <small class="text-fade">kwh</small></h2>
+										<h2 id="battery-discharged" class="text-danger">Loading...</h2>
+										<small class="text-fade">kWh</small>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+
 					<div class="row">
 						<div class="col-xxl-6 col-xl-12 col-12">
 							<div class="box">
 								<div class="box-header">
 									<div class="d-flex justify-content-between align-items-center">
-										<h4 class="box-title">Performace Details</h4>
+										<h4 class="box-title">Performance Details</h4>
+										<ul class="box-controls pull-right d-md-flex d-none">
+											<li class="dropdown">
+												<button class="dropdown-toggle btn btn-warning-light px-10" data-bs-toggle="dropdown" aria-expanded="false">Today</button>
+												<div class="dropdown-menu dropdown-menu-right">
+													<a class="dropdown-item active" href="#">Today</a>
+													<a class="dropdown-item" href="#">Yesterday</a>
+													<a class="dropdown-item" href="#">Monthly</a>
+													<a class="dropdown-item" href="#">Last month</a>
+												</div>
+											</li>
+										</ul>
 									</div>
 								</div>
 								<div class="box-body">
-									<div id="basic-pie" class="h-300"></div>
+									<div id="basic-pie" class="h-200" style="min-height: 300px;"></div>
 								</div>
 							</div>
 						</div>
+
 						<div class="col-xxl-6 col-xl-12 col-12">
 							<div class="box">
 								<div class="box-header">
 									<div class="d-flex justify-content-between align-items-center">
 										<h4 class="box-title">Generation Details</h4>
+										<ul class="box-controls pull-right d-md-flex d-none">
+											<li class="dropdown">
+												<button class="dropdown-toggle btn btn-warning-light px-10" data-bs-toggle="dropdown" aria-expanded="false">Today</button>
+												<div class="dropdown-menu dropdown-menu-right">
+													<a class="dropdown-item active" href="#">Today</a>
+													<a class="dropdown-item" href="#">Yesterday</a>
+													<a class="dropdown-item" href="#">Monthly</a>
+													<a class="dropdown-item" href="#">Last month</a>
+												</div>
+											</li>
+										</ul>
 									</div>
 								</div>
 								<div class="box-body">
-									<div id="chart"></div>
+									<div id="chart" class="h-300"></div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div class="row">
-						<div class="col-xxl-6 col-xl-12 col-lg-12 col-12 ">
-							<div class="box box-body pull-up current">
-								<div class="d-flex justify-content-between align-items-center">
-									<h4 class="fw-500 mb-0">Current State</h4>
-									<a href="#">
-										<p class="mb-0 text-fade">More Info</p>
-									</a>
-								</div>
-								<div class="d-flex w-p100 rounded-5 overflow-hidden mt-15">
-									<div class="bg-primary h-10" style="width: 60%;"></div>
-									<div class="bg-success h-10" style="width: 40%;"></div>
-								</div>
-								<div class="row mt-20">
-									<div class="col-6">
-										<h4>9.5 kwh</h4>
-										<div class="media-body ps-15 bs-5 rounded border-primary">
-											<span class="title text-fade">Exported - 60% </span>
-										</div>
-									</div>
-									<div class="col-6">
-										<h4>5.5 Kwh</h4>
-										<div class="media-body ps-15 bs-5 rounded border-success">
-											<span class="title text-fade">Selfuse - 40% </span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-xxl-3 col-xl-6 col-lg-6 col-12">
-							<div class="box box-body pull-up">
-								<center>
-									<div>
-										<span class="badge badge-white border border-4 rounded-3 border-secondary-light"><img src="https://solar-admin-template.multipurposethemes.com/bs5/images/down.png" class="w-30 h-30"></span>
-										<p class="my-1 fw-500 ">Meter Importenergy</p>
-									</div>
-								</center>
-								<hr class="my-5">
-								<div class="row">
-									<div class="col-6 be-1">
-										<p class="mb-0 text-fade">Energy</p>
-										<h6 class="mb-0">85.25 Kwh</h6>
-									</div>
-									<div class="col-6">
-										<p class="mb-0 text-fade">Cost</p>
-										<h6 class="mb-0">USD$25.3</h6>
-									</div>
-								</div>
 
-							</div>
-						</div>
-						<div class="col-xxl-3 col-xl-6 col-lg-6 col-12">
-							<div class="box box-body pull-up">
-								<center>
-									<div>
-										<span class="badge badge-white border border-4 rounded-3 border-secondary-light"><img src="https://solar-admin-template.multipurposethemes.com/bs5/images/up.png" class="w-30 h-30"></span>
-										<p class="my-1 fw-500">Meter Exportenergy</p>
-									</div>
-								</center>
-								<hr class="my-5">
-								<div class="row">
-									<div class="col-6 be-1">
-										<p class="mb-0 text-fade">Energy</p>
-										<h6 class="mb-0">-5.25 Kwh</h6>
-									</div>
-									<div class="col-6">
-										<p class="mb-0 text-fade">Cost</p>
-										<h6 class="mb-0">-USD$5.3</h6>
-									</div>
-								</div>
-
-							</div>
-						</div>
-					</div>
 					<div class="row">
-						<div class="col-xl-7 col-lg-12 col-12">
+						<div class="col-xl-6 col-lg-12 col-12">
 							<div class="box">
 								<div class="box-header">
 									<h4 class="box-title">Device Performance</h4>
 									<ul class="box-controls pull-right d-md-flex d-none">
 										<li class="dropdown">
-											<button class="dropdown-toggle btn btn-warning-light px-10" data-bs-toggle="dropdown" href="#" aria-expanded="false">Today</button>
+											<button class="dropdown-toggle btn btn-warning-light px-10" data-bs-toggle="dropdown" aria-expanded="false">Today</button>
 											<div class="dropdown-menu dropdown-menu-right">
 												<a class="dropdown-item active" href="#">Today</a>
 												<a class="dropdown-item" href="#">Yesterday</a>
@@ -397,37 +301,413 @@
 									</ul>
 								</div>
 								<div class="box-body">
-									<div id="charts_widget_1_chart"></div>
+									<div id="charts_widget_1_chart" class="h-300"></div>
 								</div>
 							</div>
 						</div>
-						<div class="col-xl-5 col-lg-12 col-12">
+
+						<div class="col-xl-6 col-lg-12 col-12">
 							<div class="box">
 								<div class="box-header">
 									<h4 class="box-title">Power Statistics</h4>
 								</div>
 								<div class="box-body">
-									<div class="d-flex  justify-content-between align-items-center">
-										<p class="mb-0 text-fade"><span class="badge badge-md badge-dot" style="background-color:#008ffb;"></span> Inverter Power</p>
-										<p class="mb-0 text-fade"><span class="badge badge-md badge-dot" style="background-color:#00e396;"></span> Feedin Power</p>
-										<p class="mb-0 text-fade"><span class="badge badge-md badge-dot" style="background-color:#feb019;"></span> Load Power</p>
+									<div class="d-flex justify-content-between align-items-center">
+										<p class="mb-0 text-fade">
+											<span class="badge badge-md badge-dot" style="background-color:#008ffb;"></span> Inverter Power
+										</p>
+										<p class="mb-0 text-fade">
+											<span class="badge badge-md badge-dot" style="background-color:#00e396;"></span> Feed-in Power
+										</p>
+										<p class="mb-0 text-fade">
+											<span class="badge badge-md badge-dot" style="background-color:#feb019;"></span> Load Power
+										</p>
 									</div>
-									<div class="d-flex  justify-content-between align-items-center">
-										<h3 class="mb-0">2.362 <small>kW</small></h3>
-										<h3 class="mb-0">-4.936<small>kW</small></h3>
-										<h3 class="mb-0">6.358 <small>kW</small></h3>
+									<div class="d-flex justify-content-between align-items-center">
+										<h3 id="inverter-power" class="mb-0">Loading... <small>kW</small></h3>
+										<h3 id="feedin-power" class="mb-0">Loading... <small>kW</small></h3>
+										<h3 id="load-power" class="mb-0">Loading... <small>kW</small></h3>
 									</div>
-									<div id="chart2"></div>
+									<div id="chart2" class="h-200"></div>
 								</div>
 							</div>
 						</div>
 					</div>
-
 				</section>
-				<!-- /.content -->
 			</div>
 		</div>
-		<!-- /.content-wrapper -->
+		<script>
+			document.addEventListener('DOMContentLoaded', () => {
+				// Configuration constants
+				const CONFIG = {
+					TIME_FRAMES: {
+						today: 'Today',
+						lastmonth: 'Last Month'
+					},
+					CHART_HEIGHT: 300,
+					COLORS: ['#008ffb', '#00e396', '#feb019', '#ff4560'],
+					DEBOUNCE_MS: 300,
+					APEXCHARTS_MAX_ATTEMPTS: 20,
+					APEXCHARTS_INTERVAL_MS: 500
+				};
+
+				// Chart instances
+				const charts = {
+					performance: null,
+					generation: null,
+					devicePerformance: null
+				};
+
+				// Utility: Debounce function to prevent rapid calls
+				function debounce(fn, ms) {
+					let timeoutId;
+					return function(...args) {
+						clearTimeout(timeoutId);
+						timeoutId = setTimeout(() => fn.apply(this, args), ms);
+					};
+				}
+
+				// Utility: Fetch data from API
+				async function fetchData(endpoint, params = '') {
+					try {
+						const response = await fetch(`${endpoint}${params}`);
+						if (!response.ok) throw new Error(`API ${endpoint} failed: ${response.status}`);
+						return response.json();
+					} catch (error) {
+						console.error(`Fetch error for ${endpoint}:`, error);
+						throw error;
+					}
+				}
+
+				// Utility: Update text content with unit
+				function updateTextContent(elementId, value, unit = '') {
+					const element = document.getElementById(elementId);
+					if (element) element.innerHTML = `${value} <small>${unit}</small>`;
+					else console.error(`Element #${elementId} not found`);
+				}
+
+				// Utility: Render ApexCharts
+				function renderChart(elementId, options, existingChart = null) {
+					const element = document.querySelector(`#${elementId}`);
+					if (!element) {
+						console.error(`Chart container #${elementId} not found`);
+						return null;
+					}
+					try {
+						// Clear container and destroy existing chart
+						element.innerHTML = '';
+						if (existingChart) {
+							console.log(`Destroying existing chart for ${elementId}`);
+							existingChart.destroy();
+						}
+						const chart = new ApexCharts(element, options);
+						chart.render();
+						console.log(`Chart rendered for ${elementId}`);
+						return chart;
+					} catch (error) {
+						console.error(`Error rendering chart ${elementId}:`, error);
+						return null;
+					}
+				}
+
+				// Utility: Update dropdown UI
+				function updateDropdownUI(timeFrame, dropdownButton, dropdownItems) {
+					if (!dropdownButton) {
+						console.error('Dropdown button not found');
+						return;
+					}
+					dropdownButton.textContent = CONFIG.TIME_FRAMES[timeFrame.toLowerCase()] || timeFrame;
+					dropdownItems.forEach(item => {
+						item.classList.toggle('active', item.textContent.toLowerCase().replace(' ', '') === timeFrame);
+					});
+				}
+
+				// Utility: Wait for ApexCharts to load
+				function waitForApexCharts(callback) {
+					let attempts = 0;
+					const checkApexCharts = setInterval(() => {
+						attempts++;
+						if (typeof ApexCharts !== 'undefined') {
+							clearInterval(checkApexCharts);
+							callback();
+						} else if (attempts >= CONFIG.APEXCHARTS_MAX_ATTEMPTS) {
+							clearInterval(checkApexCharts);
+							console.error('ApexCharts not loaded after maximum attempts');
+						}
+					}, CONFIG.APEXCHARTS_INTERVAL_MS);
+				}
+
+				// Update solar production
+				async function updateSolarProduction() {
+					try {
+						const data = await fetchData('/api/solar-production');
+						updateTextContent('solar-production', data.solar_production, 'kWh');
+					} catch (error) {
+						console.error('Error updating solar production:', error);
+					}
+				}
+
+				// Update battery data
+				async function updateBatteryData() {
+					try {
+						const data = await fetchData('/api/battery-data');
+						updateTextContent('battery-charged', data.charged, 'kWh');
+						updateTextContent('battery-discharged', data.discharged, 'kWh');
+					} catch (error) {
+						console.error('Error updating battery data:', error);
+					}
+				}
+
+				// Update performance pie chart
+				const updatePerformanceChart = debounce(async (timeFrame = 'today') => {
+					try {
+						const data = await fetchData(`/api/performance-details?time_frame=${timeFrame}`);
+						const categories = Object.keys(data);
+						const values = Object.values(data);
+
+						const options = {
+							chart: {
+								type: 'pie',
+								height: CONFIG.CHART_HEIGHT
+							},
+							series: values,
+							labels: categories.map(cat => cat.charAt(0).toUpperCase() + cat.slice(1)),
+							colors: CONFIG.COLORS.slice(0, categories.length),
+							responsive: [{
+								breakpoint: 480,
+								options: {
+									chart: {
+										width: 200
+									},
+									legend: {
+										position: 'bottom'
+									}
+								}
+							}]
+						};
+
+						charts.performance = renderChart('basic-pie', options, charts.performance);
+					} catch (error) {
+						console.error('Error updating performance chart:', error);
+					}
+				}, CONFIG.DEBOUNCE_MS);
+
+				// Update generation line chart
+				const updateGenerationChart = debounce(async (timeFrame = 'today') => {
+					try {
+						const data = await fetchData(`/api/generation-details?time_frame=${timeFrame}`);
+						const options = {
+							chart: {
+								type: 'line',
+								height: CONFIG.CHART_HEIGHT
+							},
+							series: [{
+									name: 'Production',
+									data: data.production
+								},
+								{
+									name: 'Consumption',
+									data: data.consumption
+								}
+							],
+							xaxis: {
+								categories: data.dates,
+								title: {
+									text: 'Date'
+								}
+							},
+							yaxis: {
+								title: {
+									text: 'kWh'
+								}
+							},
+							colors: CONFIG.COLORS.slice(0, 2),
+							responsive: [{
+								breakpoint: 480,
+								options: {
+									chart: {
+										width: '100%'
+									},
+									legend: {
+										position: 'bottom'
+									}
+								}
+							}]
+						};
+						charts.generation = renderChart('chart', options, charts.generation);
+					} catch (error) {
+						console.error('Error updating generation chart:', error);
+					}
+				}, CONFIG.DEBOUNCE_MS);
+
+				// Update device performance bar chart
+				const updateDevicePerformanceChart = debounce(async (timeFrame = 'today') => {
+					physics
+					try {
+						const data = await fetchData(`/api/device-performance?time_frame=${timeFrame}`);
+						const options = {
+							chart: {
+								type: 'bar',
+								height: CONFIG.CHART_HEIGHT
+							},
+							series: [{
+								name: 'Performance',
+								data: data.devices.map(device => device.performance)
+							}],
+							xaxis: {
+								categories: data.devices.map(device => device.name),
+								title: {
+									text: 'Device'
+								}
+							},
+							yaxis: {
+								title: {
+									text: 'Performance (%)'
+								}
+							},
+							colors: [CONFIG.COLORS[0]],
+							responsive: [{
+								breakpoint: 480,
+								options: {
+									chart: {
+										width: '100%'
+									},
+									legend: {
+										position: 'bottom'
+									}
+								}
+							}]
+						};
+						charts.devicePerformance = renderChart('charts_widget_1_chart', options, charts.devicePerformance);
+					} catch (error) {
+						console.error('Error updating device performance chart:', error);
+					}
+				}, CONFIG.DEBOUNCE_MS);
+
+				// Update power statistics area chart
+				async function updatePowerStatistics() {
+					try {
+						const data = await fetchData('/api/power-statistics');
+						updateTextContent('inverter-power', data.inverter_power, 'kW');
+						updateTextContent('feedin-power', data.feed_in_power, 'kW');
+						updateTextContent('load-power', data.load_power, 'kW');
+
+						const options = {
+							chart: {
+								type: 'area',
+								height: 200,
+								stacked: false
+							},
+							series: [{
+									name: 'Inverter Power',
+									data: [data.inverter_power]
+								},
+								{
+									name: 'Feed-in Power',
+									data: [data.feed_in_power]
+								},
+								{
+									name: 'Load Power',
+									data: [data.load_power]
+								}
+							],
+							xaxis: {
+								categories: ['Latest'],
+								title: {
+									text: 'Time'
+								}
+							},
+							yaxis: {
+								title: {
+									text: 'Power (kW)'
+								}
+							},
+							colors: CONFIG.COLORS.slice(0, 3),
+							fill: {
+								opacity: [0.85, 0.85, 0.85]
+							},
+							responsive: [{
+								breakpoint: 480,
+								options: {
+									chart: {
+										width: '100%'
+									},
+									legend: {
+										position: 'bottom'
+									}
+								}
+							}]
+						};
+						renderChart('chart2', options);
+					} catch (error) {
+						console.error('Error updating power statistics:', error);
+					}
+				}
+
+				// Initialize dashboard
+				function initializeDashboard() {
+					// Fetch static data
+					updateSolarProduction();
+					updateBatteryData();
+					updatePowerStatistics();
+
+					// Chart configurations
+					const chartConfigs = [{
+							id: 'basic-pie',
+							updateFn: updatePerformanceChart
+						},
+						{
+							id: 'chart',
+							updateFn: updateGenerationChart
+						},
+						{
+							id: 'charts_widget_1_chart',
+							updateFn: updateDevicePerformanceChart
+						}
+					];
+
+					chartConfigs.forEach(({
+						id,
+						updateFn
+					}) => {
+						const chartElement = document.getElementById(id);
+						if (!chartElement) {
+							console.error(`Chart container #${id} not found`);
+							return;
+						}
+
+						const dropdownButton = chartElement.closest('.box')?.querySelector('.dropdown-toggle');
+						const dropdownItems = chartElement.closest('.box')?.querySelectorAll('.dropdown-menu .dropdown-item');
+
+						if (!dropdownItems?.length) {
+							console.error(`No dropdown items found for chart ${id}`);
+							return;
+						}
+
+						const defaultTimeFrame = 'today';
+						updateDropdownUI(defaultTimeFrame, dropdownButton, dropdownItems);
+						updateFn(defaultTimeFrame);
+
+						dropdownItems.forEach(item => {
+							// Clone item to remove any existing listeners
+							const newItem = item.cloneNode(true);
+							item.parentNode.replaceChild(newItem, item);
+							newItem.addEventListener('click', e => {
+								e.preventDefault();
+								const timeFrame = newItem.textContent.toLowerCase().replace(' ', '');
+								console.log(`Time frame changed for ${id}: ${timeFrame}`);
+								updateDropdownUI(timeFrame, dropdownButton, dropdownItems);
+								updateFn(timeFrame);
+							});
+						});
+					});
+				}
+
+				// Start dashboard
+				waitForApexCharts(initializeDashboard);
+			});
+		</script>
+
 
 		<footer class="main-footer bt-1">
 			<div class="pull-right d-none d-sm-inline-block">
@@ -441,8 +721,7 @@
 				document.write(new Date().getFullYear())
 			</script>
 		</footer>
-		<!-- Side panel -->
-		<!-- quick_user_toggle -->
+
 		<div class="modal modal-right fade" id="quick_user_toggle" tabindex="-1">
 			<div class="modal-dialog">
 				<div class="modal-content slim-scroll3">
@@ -627,9 +906,9 @@
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js"></script>
 	<script src="/assets/js/vendors.min.js"></script>
-	<script src="/assets/js/chat-popup.js"></script>
+	<!-- <script src="/assets/js/chat-popup.js"></script> -->
 	<script src="/assets/js/feather.min.js"></script>
-	<script src="/assets/js/echarts-en.min.js"></script>
+	<!-- <script src="/assets/js/echarts-en.min.js"></script> -->
 	<script src="/assets/js/apexcharts.js"></script>
 	<script src="/assets/js/demo.js"></script>
 	<script src="/assets//js/template.js"></script>

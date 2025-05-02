@@ -10,7 +10,6 @@ class SolarSystemSeeder extends Seeder
 {
     public function run()
     {
-        // Create two test panels
         SolarPanel::create([
             'panel_id' => 'PANEL001',
             'status' => 'active',
@@ -25,19 +24,18 @@ class SolarSystemSeeder extends Seeder
             'current_efficiency' => 74
         ]);
         
-        // Create initial system status matching dashboard values
         SystemStatus::create([
-            'total_capacity' => 210,       // 210 kWh as shown in dashboard
-            'current_production' => 0,      // 0 kW as shown in Power Generation
-            'current_consumption' => 0,     // 0 kWh as shown in Energy Consumed
-            'overall_efficiency' => 0,      // 0% as shown in Solar Efficiency
-            'battery_level' => 78.5,       // Based on gauge in dashboard showing ~75%
-            'total_charging' => 80.88,     // 80.88 as shown under Total Charging
-            'min_charging' => 3.0,         // Min 3.0 as shown in dashboard
-            'max_charging' => 6.0,         // Max 6.0 as shown in dashboard
-            'power_usage' => 12.35,        // 12.35 as shown under Power Usage
-            'one_hour_usage' => 6.8,       // 6.8 kWh as shown in dashboard
-            'yield' => 178,                // 178 kWh as shown in dashboard
+            'total_capacity' => 210,      
+            'current_production' => 0,      
+            'current_consumption' => 0,     
+            'overall_efficiency' => 0,      
+            'battery_level' => 78.5,       
+            'total_charging' => 80.88,     
+            'min_charging' => 3.0,         
+            'max_charging' => 6.0,         
+            'power_usage' => 12.35,        
+            'one_hour_usage' => 6.8,      
+            'yield' => 178,               
             'last_updated' => now()
         ]);
     }

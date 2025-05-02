@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Carbon\Carbon; // Make sure Carbon is imported
 
 class User extends Authenticatable
 {
@@ -21,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
+        'last_seen', // ✅ add last_seen to fillable
     ];
 
     /**
@@ -41,6 +43,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'last_seen' => 'datetime', // ✅ cast last_seen as datetime
     ];
 
     /**
@@ -77,5 +80,13 @@ class User extends Authenticatable
     public function isCustomer()
     {
         return $this->role->slug === 'customer';
+    }
+
+    /**
+     * Check if the user is online based on last_seen time
+     */
+    public function getIsOnlineAttribute()
+    {
+        return $this->last_seen !== null && $this->last_seen->gt(now()->subMinutes(5));
     }
 }
