@@ -32,3 +32,7 @@ Route::get('/performance-details', [DashboardController::class, 'getPerformanceD
 Route::get('/device-performance', [DashboardController::class, 'getDevicePerformance']);
 Route::get('/power-statistics', [DashboardController::class, 'getPowerStatistics']);
 Route::get('/generation-details', [DashboardController::class, 'getGenerationDetails']);
+
+Route::get('/weather-forecast', [DashboardController::class, 'getWeatherForecast']);
+Route::get('/uv-intensity', [DashboardController::class, 'getUVIntensity']);
+

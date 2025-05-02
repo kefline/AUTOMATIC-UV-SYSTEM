@@ -7,6 +7,9 @@ use App\Models\SystemStatus;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class DashboardController extends Controller
 {
@@ -161,26 +164,83 @@ class DashboardController extends Controller
             'data_points' => $data->count()
         ]);
     }
-
-
-    public function getSolarProduction()
+    public function getWeatherForecast()
     {
-        $status = SystemStatus::latest()->first();
+        $weatherResponse = Http::get('https://api.openweathermap.org/data/2.5/weather', [
+            'q' => 'Dar es Salaam',
+            'appid' => env('OPENWEATHERMAP_API_KEY'),
+            'units' => 'metric'
+        ]);
+
+        if ($weatherResponse->failed()) {
+            return response()->json(['error' => 'Failed to fetch weather data'], 500);
+        }
+
+        $weather = $weatherResponse->json();
 
         return response()->json([
-            'solar_production' => round($status->total_charging ?? 0, 2)
+            'weather' => [
+                'temperature' => data_get($weather, 'main.temp'),
+                'description' => data_get($weather, 'weather.0.description'),
+                'clouds' => data_get($weather, 'clouds.all')
+            ]
         ]);
     }
 
-
-    public function getBatteryData()
+    public function getUVIntensity()
     {
-        $status = SystemStatus::latest()->first();
+        $cacheKey = 'uv_intensity_dar_es_salaam';
 
-        return response()->json([
-            'charged' => round($status->min_charging ?? 0, 2),
-            'discharged' => round($status->max_charging ?? 0, 2)
-        ]);
+        $data = Cache::remember($cacheKey, 1800, function () {
+            $response = Http::get('https://api.openweathermap.org/data/3.0/onecall', [
+                'lat' => -6.7924,
+                'lon' => 39.2083,
+                'exclude' => 'minutely,hourly,daily,alerts',
+                'appid' => env('OPENWEATHERMAP_API_KEY'),
+            ]);
+
+            if ($response->failed()) {
+                Log::error('OpenWeatherMap API failed', [
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ]);
+                return ['error' => 'Failed to fetch UV data'];
+            }
+
+            $uvIndex = data_get($response->json(), 'current.uvi');
+
+            if (is_null($uvIndex)) {
+                return ['uvIntensity' => 'None', 'uvIndex' => 0];
+            }
+
+            return [
+                'uvIndex' => $uvIndex,
+                'uvIntensity' => $this->classifyUVIntensity($uvIndex)
+            ];
+        });
+
+        if (isset($data['error'])) {
+            return response()->json(['error' => $data['error']], 500);
+        }
+
+        return response()->json($data);
+    }
+
+    private function classifyUVIntensity($uvIndex)
+    {
+        if (!is_numeric($uvIndex) || $uvIndex < 0) {
+            return 'Invalid';
+        } elseif ($uvIndex <= 2) {
+            return 'Low';
+        } elseif ($uvIndex <= 5) {
+            return 'Moderate';
+        } elseif ($uvIndex <= 7) {
+            return 'High';
+        } elseif ($uvIndex <= 10) {
+            return 'Very High';
+        } else {
+            return 'Extreme';
+        }
     }
 
 
@@ -224,24 +284,44 @@ class DashboardController extends Controller
         return response()->json([
             'devices' => [
                 [
-                    'name' => 'Inverter 1',
-                    'performance' => 95,
+                    'name' => 'ESP32 Board',
+                    'performance' => 98,
                     'status' => 'Optimal'
                 ],
                 [
-                    'name' => 'Inverter 2',
-                    'performance' => 85,
+                    'name' => 'MG995 Servo Motor',
+                    'performance' => 89,
                     'status' => 'Good'
                 ],
                 [
-                    'name' => 'Battery 1',
+                    'name' => 'LDR Sensors',
+                    'performance' => 92,
+                    'status' => 'Optimal'
+                ],
+                [
+                    'name' => 'Solar Panel',
+                    'performance' => 93,
+                    'status' => 'Optimal'
+                ],
+                [
+                    'name' => 'INA219 Module',
+                    'performance' => 88,
+                    'status' => 'Good'
+                ],
+                [
+                    'name' => 'Li-ion DC Battery',
                     'performance' => 90,
                     'status' => 'Optimal'
+                ],
+                [
+                    'name' => 'TP4056 Charger Controller',
+                    'performance' => 87,
+                    'status' => 'Good'
                 ]
             ]
         ]);
     }
-
+    
 
     public function getPowerStatistics()
     {
@@ -254,39 +334,56 @@ class DashboardController extends Controller
 
     public function getGenerationDetails(Request $request)
     {
-        $timeFrame = $request->query('time_frame', 'today');
-        $startDate = Carbon::now();
-        $endDate = Carbon::now();
-
+        $timeFrame = $request->query('time_frame', 'week');
+        $startDate = Carbon::now()->startOfWeek(); // Start of the current week (Monday)
+        $endDate = Carbon::now()->endOfWeek(); // End of the current week (Sunday)
+    
+        // Adjust start and end dates based on time frame
         switch ($timeFrame) {
-            case 'yesterday':
-                $startDate = Carbon::yesterday()->startOfDay();
-                $endDate = Carbon::yesterday()->endOfDay();
+            case 'lastweek':
+                $startDate = Carbon::now()->subWeek()->startOfWeek();
+                $endDate = Carbon::now()->subWeek()->endOfWeek();
                 break;
-            case 'monthly':
-                $startDate = Carbon::now()->startOfMonth();
-                $endDate = Carbon::now()->endOfMonth();
-                break;
-            case 'lastmonth':
-                $startDate = Carbon::now()->subMonth()->startOfMonth();
-                $endDate = Carbon::now()->subMonth()->endOfMonth();
-                break;
-            case 'today':
+            case 'week':
             default:
-                $startDate = Carbon::today()->startOfDay();
-                $endDate = Carbon::today()->endOfDay();
+                $startDate = Carbon::now()->startOfWeek();
+                $endDate = Carbon::now()->endOfWeek();
                 break;
         }
-
+    
+        // Query to aggregate data by 12-hour intervals for each day
         $data = SystemStatus::select(
             DB::raw('DATE(last_updated) as date'),
+            DB::raw("CASE 
+                        WHEN HOUR(last_updated) < 12 THEN '00:00-12:00' 
+                        ELSE '12:00-24:00' 
+                     END as time_interval"),
             DB::raw('SUM(current_production) as total_production'),
             DB::raw('SUM(current_consumption) as total_consumption')
+            // For averaging instead of summing, use:
+            // DB::raw('AVG(current_production) as avg_production'),
+            // DB::raw('AVG(current_consumption) as avg_consumption')
         )
             ->whereBetween('last_updated', [$startDate, $endDate])
-            ->groupBy('date')
+            ->groupBy('date', 'time_interval')
+            ->orderBy('date', 'asc')
+            ->orderBy('time_interval', 'asc')
             ->get();
-
-        $data = $data->unique('date');
+    
+        // Format the data for the response
+        $formattedData = $data->map(function ($item) {
+            return [
+                'date' => $item->date,
+                'time_interval' => $item->time_interval,
+                'total_production' => round($item->total_production, 2),
+                'total_consumption' => round($item->total_consumption, 2),
+            ];
+        });
+    
+        return response()->json([
+            'start_date' => $startDate->toDateString(),
+            'end_date' => $endDate->toDateString(),
+            'data' => $formattedData
+        ]);
     }
 }

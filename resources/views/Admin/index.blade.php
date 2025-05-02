@@ -341,17 +341,7 @@
 																</div>
 															</div>
 														</div>
-														<div class="col-3">
-															<div class="d-flex align-items-center">
-																<div>
-																	<i class="fa-solid fa-solar-panel text-success"></i>
-																</div>
-																<div class="mx-10">
-																	<p class="mb-0 text-black">Yield</p>
-																	<h5 class="mb-0 text-black" id="yield">--</h5>
-																</div>
-															</div>
-														</div>
+														
 														<div class="col-3">
 															<div class="d-flex align-items-center">
 																<div>
@@ -400,7 +390,7 @@
 
 						$users = $query->paginate(4)->appends(['search' => $search]);
 						@endphp
-						<div class="col-xxl-7 col-xl-12 col-12">
+						<div class="col-xxl-12 col-xl-12 col-12">
 							<div class="box">
 								<div class="box-header with-border">
 									<div class="d-flex justify-content-between align-items-center">
@@ -521,112 +511,7 @@
 							</div>
 						</div>
 						@endif
-						@if(auth()->check() && auth()->user()->isAdmin())
-						<div class="col-xxl-5 col-xl-12 col-12">
-							<div class="box yield">
-								<div class="box-header d-flex justify-content-between align-items-center">
-									<h4 class="box-title">Yield Daily</h4>
-									<div>
-										<ul class="box-controls pull-right d-md-flex d-none">
-											<li class="dropdown">
-												<a data-bs-toggle="dropdown" href="#" aria-expanded="false" class=""><i
-														class="ti-more-alt rotate-90 text-muted"></i></a>
-												<div class="dropdown-menu dropdown-menu-right">
-													<a class="dropdown-item active" href="#">Today</a>
-													<a class="dropdown-item" href="#">Yesterday</a>
-													<a class="dropdown-item" href="#">Monthly</a>
-													<a class="dropdown-item" href="#">Last month</a>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
-								<div class="box-body">
-									<div>
-										<div class="d-flex  justify-content-between align-items-center">
-											<p class="mb-0 text-fade"><span class="badge badge-md badge-dot"
-													style="background-color:#008ffb;"></span> Yield Energy</p>
-											<p class="mb-0 text-fade"><span class="badge badge-md badge-dot"
-													style="background-color:#00e396;"></span> Exported Energy</p>
-											<p class="mb-0 text-fade"><span class="badge badge-md badge-dot"
-													style="background-color:#feb019;"></span> Selfuse Energy</p>
-										</div>
-										<div class="d-flex  justify-content-between align-items-center">
-											<h3>17.6 <small>kwh</small></h3>
-											<h3>8.9 <small>kwh</small></h3>
-											<h3>12.87 <small>kwh</small></h3>
-										</div>
-									</div>
-									<div>
-										<div id="chart"></div>
-									</div>
-									<div>
-										<h6 class="fw-500">Battery Status</h6>
-										<div class="d-flex justify-content-between align-items-center">
-											<p class="text-fade mb-0">Load: <span class="text-dark fw-500">14%</span>
-											</p>
-											<p class="text-fade mb-0">Charge: <span class="text-dark fw-500">100%</span>
-											</p>
-											<p class="text-fade mb-0">Power <span class="text-dark-500">23.5 V<span></p>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						@else
-						<div class="col-xxl-12 col-xl-12 col-12">
-							<div class="box yield">
-								<div class="box-header d-flex justify-content-between align-items-center">
-									<h4 class="box-title">Yield Daily</h4>
-									<div>
-										<ul class="box-controls pull-right d-md-flex d-none">
-											<li class="dropdown">
-												<a data-bs-toggle="dropdown" href="#" aria-expanded="false" class=""><i
-														class="ti-more-alt rotate-90 text-muted"></i></a>
-												<div class="dropdown-menu dropdown-menu-right">
-													<a class="dropdown-item active" href="#">Today</a>
-													<a class="dropdown-item" href="#">Yesterday</a>
-													<a class="dropdown-item" href="#">Monthly</a>
-													<a class="dropdown-item" href="#">Last month</a>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
-								<div class="box-body">
-									<div>
-										<div class="d-flex  justify-content-between align-items-center">
-											<p class="mb-0 text-fade"><span class="badge badge-md badge-dot"
-													style="background-color:#008ffb;"></span> Yield Energy</p>
-											<p class="mb-0 text-fade"><span class="badge badge-md badge-dot"
-													style="background-color:#00e396;"></span> Exported Energy</p>
-											<p class="mb-0 text-fade"><span class="badge badge-md badge-dot"
-													style="background-color:#feb019;"></span> Selfuse Energy</p>
-										</div>
-										<div class="d-flex  justify-content-between align-items-center">
-											<h3>17.6 <small>kwh</small></h3>
-											<h3>8.9 <small>kwh</small></h3>
-											<h3>12.87 <small>kwh</small></h3>
-										</div>
-									</div>
-									<div>
-										<div id="chart"></div>
-									</div>
-									<div>
-										<h6 class="fw-500">Battery Status</h6>
-										<div class="d-flex justify-content-between align-items-center">
-											<p class="text-fade mb-0">Load: <span class="text-dark fw-500">14%</span>
-											</p>
-											<p class="text-fade mb-0">Charge: <span class="text-dark fw-500">100%</span>
-											</p>
-											<p class="text-fade mb-0">Power <span class="text-dark-500">23.5 V<span></p>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						@endif
-
+						
 
 					</div>
 
@@ -835,13 +720,12 @@
 							document.getElementById('system-efficiency').textContent = data.system_status.overall_efficiency + '%';
 							document.getElementById('power-generation').textContent = (data.system_status.current_production / 1000).toFixed(2) + ' kW';
 							document.getElementById('energy-consumed').textContent = (data.system_status.current_consumption / 1000).toFixed(2) + ' kWh';
-							document.getElementById('total-charging').textContent = data.system_status.total_charging + ' kWh';
-							document.getElementById('min-charging').textContent = data.system_status.min_charging + ' kWh';
-							document.getElementById('max-charging').textContent = data.system_status.max_charging + ' kWh';
+							document.getElementById('total-charging').textContent = data.system_status.total_charging + ' %';
+							document.getElementById('min-charging').textContent = data.system_status.min_charging + ' %';
+							document.getElementById('max-charging').textContent = data.system_status.max_charging + ' %';
 							document.getElementById('power-usage').textContent = data.system_status.power_usage + ' kWh';
 							document.getElementById('one-hour-usage').textContent = data.system_status.one_hour_usage + ' kWh';
 							document.getElementById('total-capacity').textContent = (data.system_status.total_capacity / 1000).toFixed(2) + ' kWh';
-							document.getElementById('yield').textContent = data.system_status.yield + ' kWh';
 
 							// Panel Status
 							document.getElementById('panel-status').textContent = data.panel_status.status;
@@ -854,7 +738,7 @@
 								'system-efficiency', 'power-generation', 'energy-consumed',
 								'total-charging', 'min-charging', 'max-charging',
 								'power-usage', 'one-hour-usage', 'total-capacity',
-								'yield', 'panel-status', 'panel-angle'
+								 'panel-status', 'panel-angle'
 							];
 							elements.forEach(id => {
 								document.getElementById(id).textContent = 'Error';

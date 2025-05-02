@@ -12,6 +12,7 @@
 	<title>Performance Dashboard</title>
 
 	<link rel="stylesheet" href="https://solar-admin-template.multipurposethemes.com/bs5/template/vertical/src/css/vendors_css.css">
+	<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
 	<link href="/assets/css/all.min.css" rel="stylesheet">
 
 
@@ -203,34 +204,30 @@
 									<div>
 										<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/solar-power.png" class="w-160 h-160" alt="Solar Power">
 									</div>
-									<div class="mx-20">
-										<h4>Solar Production</h4>
-										<h1 id="solar-production" class="mb-2">Loading...</h1>
-										<span class="fs-20">kWh</span>
+									<div style="margin: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 10px; background-color: #f9f9f9; box-shadow: 2px 2px 8px rgba(0,0,0,0.1); max-width: 300px;">
+										<h5 style="margin-bottom: 10px; font-size: 1.2rem; color: #333;">Weather Forecasting</h5>
+										<p id="weather-description" style="margin: 5px 0; color: #555;">Loading...</p>
+										<p id="temperature" style="margin: 5px 0; font-weight: bold; color: #222;"></p>
+										<p id="clouds" style="margin: 5px 0; color: #555;"></p>
 									</div>
+
 								</div>
 							</div>
 						</div>
 
 						<div class="col-xxl-6 col-xl-8 col-lg-8 col-12">
-							<div class="box box-body pull-up battery">
-								<div class="d-flex justify-content-around align-items-center">
-									<div>
-										<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/battery (3).png" class="w-160 h-160" alt="Battery">
-									</div>
-									<div>
-										<h4 class="text-success">Charged</h4>
-										<h2 id="battery-charged" class="text-success">Loading...</h2>
-										<small class="text-fade">kWh</small>
-									</div>
-									<div class="ms-5">
-										<h4 class="text-danger">Discharged</h4>
-										<h2 id="battery-discharged" class="text-danger">Loading...</h2>
-										<small class="text-fade">kWh</small>
+							<div class="box box-body pull-up">
+								<div class="d-flex justify-content-center align-items-center">
+									<div class="text-center">
+										<i class="fas fa-sun fa-5x text-warning"></i>
+										<h4 class="mt-3">UV Intensity</h4>
+										<h2 id="uv-intensity" class="text-dark">Loading...</h2>
+										<small class="text-fade">Level: Low / Moderate / High</small>
 									</div>
 								</div>
 							</div>
 						</div>
+
 					</div>
 
 					<div class="row">
@@ -338,7 +335,6 @@
 		</div>
 		<script>
 			document.addEventListener('DOMContentLoaded', () => {
-				// Configuration constants
 				const CONFIG = {
 					TIME_FRAMES: {
 						today: 'Today',
@@ -348,7 +344,8 @@
 					COLORS: ['#008ffb', '#00e396', '#feb019', '#ff4560'],
 					DEBOUNCE_MS: 300,
 					APEXCHARTS_MAX_ATTEMPTS: 20,
-					APEXCHARTS_INTERVAL_MS: 500
+					APEXCHARTS_INTERVAL_MS: 500,
+					WEATHER_REFRESH_INTERVAL: 1800000 // 30 minutes in milliseconds
 				};
 
 				// Chart instances
@@ -371,10 +368,13 @@
 				async function fetchData(endpoint, params = '') {
 					try {
 						const response = await fetch(`${endpoint}${params}`);
-						if (!response.ok) throw new Error(`API ${endpoint} failed: ${response.status}`);
+						if (!response.ok) {
+							const errorText = await response.text();
+							throw new Error(`API ${endpoint} failed: ${response.status} - ${errorText}`);
+						}
 						return response.json();
 					} catch (error) {
-						console.error(`Fetch error for ${endpoint}:`, error);
+						console.error(`Fetch error for ${endpoint}:`, error.message);
 						throw error;
 					}
 				}
@@ -394,7 +394,6 @@
 						return null;
 					}
 					try {
-						// Clear container and destroy existing chart
 						element.innerHTML = '';
 						if (existingChart) {
 							console.log(`Destroying existing chart for ${elementId}`);
@@ -437,26 +436,74 @@
 					}, CONFIG.APEXCHARTS_INTERVAL_MS);
 				}
 
-				// Update solar production
-				async function updateSolarProduction() {
+				// Update weather forecast
+				async function updateWeatherForecast() {
+					const weatherDescElement = document.getElementById('weather-description');
+					const temperatureElement = document.getElementById('temperature');
+					const cloudsElement = document.getElementById('clouds');
+
+					if (!weatherDescElement) {
+						console.error('Weather description element not found');
+						return;
+					}
+
 					try {
-						const data = await fetchData('/api/solar-production');
-						updateTextContent('solar-production', data.solar_production, 'kWh');
+						weatherDescElement.textContent = 'Loading...';
+						if (temperatureElement) temperatureElement.textContent = '';
+						if (cloudsElement) cloudsElement.textContent = '';
+
+						const data = await fetchData('/api/weather-forecast');
+
+						if (data.weather) {
+							weatherDescElement.textContent = `Condition: ${data.weather.description}`;
+							if (temperatureElement) temperatureElement.textContent = `Temperature: ${data.weather.temperature}°C`;
+							if (cloudsElement) cloudsElement.textContent = `Cloud Cover: ${data.weather.clouds}%`;
+							console.log('Weather forecast updated successfully');
+						} else {
+							throw new Error('Invalid weather data format');
+						}
 					} catch (error) {
-						console.error('Error updating solar production:', error);
+						console.error('Error updating weather forecast:', error.message);
+						weatherDescElement.textContent = 'Weather information unavailable';
 					}
 				}
 
-				// Update battery data
-				async function updateBatteryData() {
+				// Update UV intensity
+				async function updateUVIntensity() {
+					const uvIntensityElement = document.getElementById('uv-intensity');
+					const uvLevelElement = uvIntensityElement?.parentElement.querySelector('small.text-fade');
+
+					if (!uvIntensityElement || !uvLevelElement) {
+						console.error('UV intensity elements not found');
+						return;
+					}
+
 					try {
-						const data = await fetchData('/api/battery-data');
-						updateTextContent('battery-charged', data.charged, 'kWh');
-						updateTextContent('battery-discharged', data.discharged, 'kWh');
+						uvIntensityElement.textContent = 'Loading...';
+						uvLevelElement.textContent = 'Level: ...';
+
+						const response = await fetch('/uv-intensity');
+						const data = await response.json();
+
+						if (!response.ok) {
+							throw new Error(data.error || 'Failed to fetch data');
+						}
+
+						if (data.uvIndex !== undefined && data.uvIntensity) {
+							uvIntensityElement.textContent = data.uvIndex.toFixed(1);
+							uvLevelElement.textContent = `Level: ${data.uvIntensity}`;
+							console.log('UV intensity updated:', data);
+						} else {
+							throw new Error('Invalid UV data format');
+						}
 					} catch (error) {
-						console.error('Error updating battery data:', error);
+						console.error('Error fetching UV data:', error.message);
+						uvIntensityElement.textContent = 'N/A';
+						uvLevelElement.textContent = 'Level: Unavailable';
 					}
 				}
+
+
 
 				// Update performance pie chart
 				const updatePerformanceChart = debounce(async (timeFrame = 'today') => {
@@ -488,7 +535,7 @@
 
 						charts.performance = renderChart('basic-pie', options, charts.performance);
 					} catch (error) {
-						console.error('Error updating performance chart:', error);
+						console.error('Error updating performance chart:', error.message);
 					}
 				}, CONFIG.DEBOUNCE_MS);
 
@@ -502,14 +549,12 @@
 								height: CONFIG.CHART_HEIGHT
 							},
 							series: [{
-									name: 'Production',
-									data: data.production
-								},
-								{
-									name: 'Consumption',
-									data: data.consumption
-								}
-							],
+								name: 'Production',
+								data: data.production
+							}, {
+								name: 'Consumption',
+								data: data.consumption
+							}],
 							xaxis: {
 								categories: data.dates,
 								title: {
@@ -536,13 +581,12 @@
 						};
 						charts.generation = renderChart('chart', options, charts.generation);
 					} catch (error) {
-						console.error('Error updating generation chart:', error);
+						console.error('Error updating generation chart:', error.message);
 					}
 				}, CONFIG.DEBOUNCE_MS);
 
 				// Update device performance bar chart
 				const updateDevicePerformanceChart = debounce(async (timeFrame = 'today') => {
-					physics
 					try {
 						const data = await fetchData(`/api/device-performance?time_frame=${timeFrame}`);
 						const options = {
@@ -580,7 +624,7 @@
 						};
 						charts.devicePerformance = renderChart('charts_widget_1_chart', options, charts.devicePerformance);
 					} catch (error) {
-						console.error('Error updating device performance chart:', error);
+						console.error('Error updating device performance chart:', error.message);
 					}
 				}, CONFIG.DEBOUNCE_MS);
 
@@ -599,18 +643,15 @@
 								stacked: false
 							},
 							series: [{
-									name: 'Inverter Power',
-									data: [data.inverter_power]
-								},
-								{
-									name: 'Feed-in Power',
-									data: [data.feed_in_power]
-								},
-								{
-									name: 'Load Power',
-									data: [data.load_power]
-								}
-							],
+								name: 'Inverter Power',
+								data: [data.inverter_power]
+							}, {
+								name: 'Feed-in Power',
+								data: [data.feed_in_power]
+							}, {
+								name: 'Load Power',
+								data: [data.load_power]
+							}],
 							xaxis: {
 								categories: ['Latest'],
 								title: {
@@ -640,31 +681,31 @@
 						};
 						renderChart('chart2', options);
 					} catch (error) {
-						console.error('Error updating power statistics:', error);
+						console.error('Error updating power statistics:', error.message);
 					}
 				}
 
 				// Initialize dashboard
 				function initializeDashboard() {
-					// Fetch static data
-					updateSolarProduction();
-					updateBatteryData();
 					updatePowerStatistics();
+					updateWeatherForecast();
+					updateUVIntensity();
 
-					// Chart configurations
+					setInterval(() => {
+						updateWeatherForecast();
+						updateUVIntensity();
+					}, CONFIG.WEATHER_REFRESH_INTERVAL);
+
 					const chartConfigs = [{
-							id: 'basic-pie',
-							updateFn: updatePerformanceChart
-						},
-						{
-							id: 'chart',
-							updateFn: updateGenerationChart
-						},
-						{
-							id: 'charts_widget_1_chart',
-							updateFn: updateDevicePerformanceChart
-						}
-					];
+						id: 'basic-pie',
+						updateFn: updatePerformanceChart
+					}, {
+						id: 'chart',
+						updateFn: updateGenerationChart
+					}, {
+						id: 'charts_widget_1_chart',
+						updateFn: updateDevicePerformanceChart
+					}];
 
 					chartConfigs.forEach(({
 						id,
@@ -689,7 +730,6 @@
 						updateFn(defaultTimeFrame);
 
 						dropdownItems.forEach(item => {
-							// Clone item to remove any existing listeners
 							const newItem = item.cloneNode(true);
 							item.parentNode.replaceChild(newItem, item);
 							newItem.addEventListener('click', e => {
@@ -703,7 +743,6 @@
 					});
 				}
 
-				// Start dashboard
 				waitForApexCharts(initializeDashboard);
 			});
 		</script>
