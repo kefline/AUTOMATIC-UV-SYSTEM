@@ -17,7 +17,6 @@ return new class extends Migration
             $table->float('current_production')->default(0);
             $table->float('current_consumption')->default(0);
             $table->float('overall_efficiency')->default(0);
-            $table->float('battery_level')->default(0);
             $table->timestamp('last_updated')->useCurrent();
             $table->timestamps();
         });

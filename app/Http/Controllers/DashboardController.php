@@ -4,36 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Models\SolarPanel;
 use App\Models\SystemStatus;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
 
 class DashboardController extends Controller
 {
-    // Existing Methods (unchanged)
     public function getData()
     {
-        $status = SystemStatus::latest()->first();
-
-        if (!$status) {
-            $status = SystemStatus::create([
-                'total_capacity' => 10000,
-                'current_production' => 0,
-                'current_consumption' => 0,
-                'overall_efficiency' => 0,
-                'battery_level' => 0,
-                'total_charging' => 0,
-                'min_charging' => 0,
-                'max_charging' => 0,
-                'power_usage' => 0,
-                'one_hour_usage' => 0,
-                'yield' => 0,
-                'last_updated' => now()
-            ]);
-        }
+        $status = SystemStatus::latest()->first() ?? SystemStatus::create([
+            'total_capacity' => 10000,
+            'current_production' => 0,
+            'current_consumption' => 0,
+            'overall_efficiency' => 0,
+            'battery_level' => 0,
+            'total_charging' => 0,
+            'min_charging' => 0,
+            'max_charging' => 0,
+            'one_hour_usage' => 0,
+            'last_updated' => now(),
+        ]);
 
         $panel = SolarPanel::latest()->first();
 
@@ -47,16 +40,14 @@ class DashboardController extends Controller
                 'total_charging' => $status->total_charging,
                 'min_charging' => $status->min_charging,
                 'max_charging' => $status->max_charging,
-                'power_usage' => $status->power_usage,
                 'one_hour_usage' => $status->one_hour_usage,
-                'yield' => $status->yield,
                 'last_updated' => $status->last_updated,
             ],
             'panel_status' => [
                 'status' => $panel?->status ?? 'Offline',
                 'current_angle' => $panel?->current_angle ?? 0,
                 'current_efficiency' => $panel?->current_efficiency ?? 0,
-            ]
+            ],
         ]);
     }
 
@@ -73,7 +64,7 @@ class DashboardController extends Controller
 
     public function updateSystemStatus(Request $request)
     {
-        $validatedData = $request->validate([
+        $validated = $request->validate([
             'overall_efficiency' => 'nullable|numeric|min:0|max:100',
             'current_production' => 'nullable|numeric|min:0',
             'current_consumption' => 'nullable|numeric|min:0',
@@ -98,92 +89,76 @@ class DashboardController extends Controller
             'power_usage' => $request->input('power_usage', 0),
             'one_hour_usage' => $request->input('one_hour_usage', 0),
             'yield' => $request->input('yield', 0),
-            'last_updated' => now()
+            'last_updated' => now(),
         ]);
 
         return response()->json([
             'message' => 'System status updated',
-            'status' => $status
+            'status' => $status,
         ]);
     }
 
     public function updatePanelStatus(Request $request)
     {
-        $apiKey = $request->header('X-API-KEY');
-        if (!$apiKey || $apiKey !== env('MICROCONTROLLER_API_KEY', 'lTXKl4Fw6t4CQ3TmQMb7DE3QmOAJzX7GknADWKZjOjI=')) {
-            return response()->json([
-                'message' => 'Unauthorized access. Invalid or missing API key.',
-                'error' => true
-            ], 401);
+        if ($request->header('X-API-KEY') !== env('MICROCONTROLLER_API_KEY', 'lTXKl4Fw6t4CQ3TmQMb7DE3QmOAJzX7GknADWKZjOjI=')) {
+            return response()->json(['message' => 'Unauthorized access. Invalid or missing API key.', 'error' => true], 401);
         }
 
-        $validatedData = $request->validate([
+        $validated = $request->validate([
             'panel_id' => 'required|string',
             'panel_status' => 'nullable|string',
             'panel_angle' => 'nullable|numeric',
-            'overall_efficiency' => 'nullable|numeric|min:0|max:100'
+            'overall_efficiency' => 'nullable|numeric|min:0|max:100',
         ]);
 
-        $updateData = [];
-        if ($request->has('panel_status')) {
-            $updateData['status'] = $request->input('panel_status');
-        }
-        if ($request->has('panel_angle')) {
-            $updateData['current_angle'] = $request->input('panel_angle');
-        }
-        if ($request->has('overall_efficiency')) {
-            $updateData['current_efficiency'] = $request->input('overall_efficiency');
+        $updateData = array_filter([
+            'status' => $request->input('panel_status'),
+            'current_angle' => $request->input('panel_angle'),
+            'current_efficiency' => $request->input('overall_efficiency'),
+        ]);
+
+        if (empty($updateData)) {
+            return response()->json(['message' => 'No update data provided.', 'error' => true], 422);
         }
 
-        if (!empty($updateData)) {
-            $panel = SolarPanel::updateOrCreate(
-                ['panel_id' => $request->input('panel_id')],
-                $updateData
-            );
-            return response()->json([
-                'message' => 'Panel status updated successfully',
-                'panel' => $panel
-            ]);
-        }
+        $panel = SolarPanel::updateOrCreate(['panel_id' => $request->input('panel_id')], $updateData);
 
         return response()->json([
-            'message' => 'No update data provided. Please include at least one of: panel_status, panel_angle, or overall_efficiency',
-            'error' => true
-        ], 422);
+            'message' => 'Panel status updated successfully',
+            'panel' => $panel,
+        ]);
     }
 
     public function getWeeklyProduction()
     {
-        $oneWeekAgo = Carbon::now()->subDays(7);
-        $data = SystemStatus::where('created_at', '>=', $oneWeekAgo)->get();
-
-        $averageProduction = $data->avg('current_production');
+        $data = SystemStatus::where('created_at', '>=', Carbon::now()->subDays(7))->get();
 
         return response()->json([
-            'average_weekly_production' => round($averageProduction, 2),
-            'data_points' => $data->count()
+            'average_weekly_production' => round($data->avg('current_production'), 2),
+            'data_points' => $data->count(),
         ]);
     }
+
     public function getWeatherForecast()
     {
-        $weatherResponse = Http::get('https://api.openweathermap.org/data/2.5/weather', [
+        $response = Http::get('https://api.openweathermap.org/data/2.5/weather', [
             'q' => 'Dar es Salaam',
             'appid' => env('OPENWEATHERMAP_API_KEY'),
-            'units' => 'metric'
+            'units' => 'metric',
         ]);
 
-        if ($weatherResponse->failed()) {
+        if ($response->failed()) {
             return response()->json(['error' => 'Failed to fetch weather data'], 500);
         }
 
-        $weather = $weatherResponse->json();
+        $weather = $response->json();
 
         return response()->json([
             'weather' => [
                 'temperature' => data_get($weather, 'main.temp'),
                 'description' => data_get($weather, 'weather.0.description'),
-                'clouds' => data_get($weather, 'clouds.all')
-            ]
+                'clouds' => data_get($weather, 'clouds.all'),
+            ],
         ]);
     }
 
@@ -191,86 +166,81 @@ class DashboardController extends Controller
     {
         $cacheKey = 'uv_intensity_dar_es_salaam';
 
-        $data = Cache::remember($cacheKey, 1800, function () {
-            $response = Http::get('https://api.openweathermap.org/data/3.0/onecall', [
-                'lat' => -6.7924,
-                'lon' => 39.2083,
-                'exclude' => 'minutely,hourly,daily,alerts',
-                'appid' => env('OPENWEATHERMAP_API_KEY'),
-            ]);
+        try {
+            $data = Cache::remember($cacheKey, 900, function () {
+                Log::info('Fetching fresh UV data from OpenWeatherMap');
 
-            if ($response->failed()) {
-                Log::error('OpenWeatherMap API failed', [
-                    'status' => $response->status(),
-                    'body' => $response->body()
+                $apiKey = env('OPENWEATHERMAP_API_KEY');
+                if (empty($apiKey)) {
+                    Log::error('OpenWeatherMap API key is missing');
+                    return ['error' => 'API key is missing'];
+                }
+
+                // Use the UV Index API instead of One Call
+                $response = Http::timeout(15)->get('http://api.openweathermap.org/data/2.5/uvi', [
+                    'lat' => -6.7924,
+                    'lon' => 39.2083,
+                    'appid' => $apiKey,
                 ]);
-                return ['error' => 'Failed to fetch UV data'];
+
+                if ($response->failed()) {
+                    Log::error('OpenWeatherMap API request failed', ['status' => $response->status(), 'body' => $response->body()]);
+                    return ['error' => 'Failed to fetch UV data'];
+                }
+
+                $responseData = $response->json();
+                Log::info('OpenWeatherMap Response', $responseData);
+
+                $uvIndex = data_get($responseData, 'value');
+                if (is_null($uvIndex)) {
+                    Log::warning('UV index not found in response', ['response' => $responseData]);
+                    return ['error' => 'UV index not found'];
+                }
+
+                $uvIndex = floatval($uvIndex);
+                $uvIntensity = $this->classifyUVIntensity($uvIndex);
+
+                return [
+                    'uvIndex' => $uvIndex,
+                    'uvIntensity' => $uvIntensity,
+                    'timestamp' => now()->toIso8601String(),
+                ];
+            });
+
+            if (isset($data['error'])) {
+                return response()->json(['error' => $data['error'], 'status' => 'error'], 500);
             }
 
-            $uvIndex = data_get($response->json(), 'current.uvi');
-
-            if (is_null($uvIndex)) {
-                return ['uvIntensity' => 'None', 'uvIndex' => 0];
-            }
-
-            return [
-                'uvIndex' => $uvIndex,
-                'uvIntensity' => $this->classifyUVIntensity($uvIndex)
-            ];
-        });
-
-        if (isset($data['error'])) {
-            return response()->json(['error' => $data['error']], 500);
+            return response()->json([
+                'uvIndex' => $data['uvIndex'],
+                'uvIntensity' => $data['uvIntensity'],
+                'timestamp' => $data['timestamp'],
+                'status' => 'success',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Exception in UV intensity API: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json(['error' => 'An unexpected error occurred', 'status' => 'error'], 500);
         }
-
-        return response()->json($data);
     }
 
-    private function classifyUVIntensity($uvIndex)
+    private function classifyUVIntensity(float $index): string
     {
-        if (!is_numeric($uvIndex) || $uvIndex < 0) {
-            return 'Invalid';
-        } elseif ($uvIndex <= 2) {
-            return 'Low';
-        } elseif ($uvIndex <= 5) {
-            return 'Moderate';
-        } elseif ($uvIndex <= 7) {
-            return 'High';
-        } elseif ($uvIndex <= 10) {
-            return 'Very High';
-        } else {
-            return 'Extreme';
-        }
+        return match (true) {
+            $index < 3 => 'Low',
+            $index < 6 => 'Moderate',
+            $index < 8 => 'High',
+            $index < 11 => 'Very High',
+            default => 'Extreme',
+        };
     }
-
 
     public function getPerformanceDetails(Request $request)
     {
         $mockData = [
-            'today' => [
-                'lighting' => 25,
-                'cooking' => 35,
-                'heating' => 20,
-                'electronics' => 20
-            ],
-            'yesterday' => [
-                'lighting' => 22,
-                'cooking' => 30,
-                'heating' => 18,
-                'electronics' => 20
-            ],
-            'monthly' => [
-                'lighting' => 750,
-                'cooking' => 1200,
-                'heating' => 600,
-                'electronics' => 450
-            ],
-            'lastmonth' => [
-                'lighting' => 700,
-                'cooking' => 1100,
-                'heating' => 550,
-                'electronics' => 450
-            ]
+            'today' => ['lighting' => 25, 'cooking' => 35, 'heating' => 20, 'electronics' => 20],
+            'yesterday' => ['lighting' => 22, 'cooking' => 30, 'heating' => 18, 'electronics' => 20],
+            'monthly' => ['lighting' => 750, 'cooking' => 1200, 'heating' => 600, 'electronics' => 450],
+            'lastmonth' => ['lighting' => 700, 'cooking' => 1100, 'heating' => 550, 'electronics' => 450],
         ];
 
         $timeFrame = $request->query('time_frame', 'today');
@@ -278,112 +248,107 @@ class DashboardController extends Controller
         return response()->json($mockData[$timeFrame] ?? $mockData['today']);
     }
 
-
     public function getDevicePerformance()
     {
         return response()->json([
             'devices' => [
-                [
-                    'name' => 'ESP32 Board',
-                    'performance' => 98,
-                    'status' => 'Optimal'
-                ],
-                [
-                    'name' => 'MG995 Servo Motor',
-                    'performance' => 89,
-                    'status' => 'Good'
-                ],
-                [
-                    'name' => 'LDR Sensors',
-                    'performance' => 92,
-                    'status' => 'Optimal'
-                ],
-                [
-                    'name' => 'Solar Panel',
-                    'performance' => 93,
-                    'status' => 'Optimal'
-                ],
-                [
-                    'name' => 'INA219 Module',
-                    'performance' => 88,
-                    'status' => 'Good'
-                ],
-                [
-                    'name' => 'Li-ion DC Battery',
-                    'performance' => 90,
-                    'status' => 'Optimal'
-                ],
-                [
-                    'name' => 'TP4056 Charger Controller',
-                    'performance' => 87,
-                    'status' => 'Good'
-                ]
-            ]
+                ['name' => 'ESP32 Board', 'performance' => 98, 'status' => 'Optimal'],
+                ['name' => 'MG995 Servo Motor', 'performance' => 89, 'status' => 'Good'],
+                ['name' => 'LDR Sensors', 'performance' => 92, 'status' => 'Optimal'],
+                ['name' => 'Solar Panel', 'performance' => 93, 'status' => 'Optimal'],
+                ['name' => 'INA219 Module', 'performance' => 88, 'status' => 'Good'],
+                ['name' => 'Li-ion DC Battery', 'performance' => 90, 'status' => 'Optimal'],
+                ['name' => 'TP4056 Charger Controller', 'performance' => 87, 'status' => 'Good'],
+            ],
         ]);
     }
-    
 
     public function getPowerStatistics()
     {
         return response()->json([
             'inverter_power' => 2.362,
             'feed_in_power' => -4.936,
-            'load_power' => 6.358
+            'load_power' => 6.358,
         ]);
     }
 
     public function getGenerationDetails(Request $request)
     {
-        $timeFrame = $request->query('time_frame', 'week');
-        $startDate = Carbon::now()->startOfWeek(); // Start of the current week (Monday)
-        $endDate = Carbon::now()->endOfWeek(); // End of the current week (Sunday)
-    
-        // Adjust start and end dates based on time frame
-        switch ($timeFrame) {
-            case 'lastweek':
-                $startDate = Carbon::now()->subWeek()->startOfWeek();
-                $endDate = Carbon::now()->subWeek()->endOfWeek();
-                break;
-            case 'week':
-            default:
-                $startDate = Carbon::now()->startOfWeek();
-                $endDate = Carbon::now()->endOfWeek();
-                break;
-        }
-    
-        // Query to aggregate data by 12-hour intervals for each day
-        $data = SystemStatus::select(
-            DB::raw('DATE(last_updated) as date'),
-            DB::raw("CASE 
-                        WHEN HOUR(last_updated) < 12 THEN '00:00-12:00' 
-                        ELSE '12:00-24:00' 
-                     END as time_interval"),
-            DB::raw('SUM(current_production) as total_production'),
-            DB::raw('SUM(current_consumption) as total_consumption')
-            // For averaging instead of summing, use:
-            // DB::raw('AVG(current_production) as avg_production'),
-            // DB::raw('AVG(current_consumption) as avg_consumption')
-        )
-            ->whereBetween('last_updated', [$startDate, $endDate])
-            ->groupBy('date', 'time_interval')
-            ->orderBy('date', 'asc')
-            ->orderBy('time_interval', 'asc')
-            ->get();
-    
-        // Format the data for the response
-        $formattedData = $data->map(function ($item) {
-            return [
-                'date' => $item->date,
-                'time_interval' => $item->time_interval,
+        try {
+            $timeFrame = $request->query('time_frame', 'thismonth');
+            $dateRange = $this->getDateRange($timeFrame);
+
+            $data = SystemStatus::selectRaw("TO_CHAR(last_updated, 'YYYY-MM') AS month")
+                ->selectRaw('SUM(current_production) AS total_production')
+                ->selectRaw('SUM(current_consumption) AS total_consumption')
+                ->whereBetween('last_updated', [$dateRange['start'], $dateRange['end']])
+                ->groupByRaw("TO_CHAR(last_updated, 'YYYY-MM')")
+                ->orderBy('month')
+                ->get();
+
+            $formattedData = $data->map(fn($item) => [
+                'month' => $item->month,
                 'total_production' => round($item->total_production, 2),
                 'total_consumption' => round($item->total_consumption, 2),
-            ];
-        });
-    
+            ]);
+
+            return response()->json([
+                'start_date' => $dateRange['start']->toDateString(),
+                'end_date' => $dateRange['end']->toDateString(),
+                'data' => $formattedData,
+                'status' => 'success',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error in getGenerationDetails: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json([
+                'error' => 'Failed to fetch generation details',
+                'status' => 'error',
+            ], 500);
+        }
+    }
+
+    private function getDateRange(string $timeFrame): array
+    {
+        $now = Carbon::now();
+
+        return match ($timeFrame) {
+            'thismonth' => [
+                'start' => $now->copy()->startOfMonth(),
+                'end' => $now->copy()->endOfMonth(),
+            ],
+            'lastmonth' => [
+                'start' => $now->copy()->subMonth()->startOfMonth(),
+                'end' => $now->copy()->subMonth()->endOfMonth(),
+            ],
+            'last3months' => [
+                'start' => $now->copy()->subMonths(2)->startOfMonth(),
+                'end' => $now->copy()->endOfMonth(),
+            ],
+            'last6months' => [
+                'start' => $now->copy()->subMonths(5)->startOfMonth(),
+                'end' => $now->copy()->endOfMonth(),
+            ],
+            'year' => [
+                'start' => $now->copy()->startOfYear(),
+                'end' => $now->copy()->endOfYear(),
+            ],
+            default => [
+                'start' => $now->copy()->startOfMonth(),
+                'end' => $now->copy()->endOfMonth(),
+            ],
+        };
+    }
+
+    public function getTimeFrameOptions()
+    {
         return response()->json([
-            'start_date' => $startDate->toDateString(),
-            'end_date' => $endDate->toDateString(),
-            'data' => $formattedData
+            'options' => [
+                ['value' => 'thismonth', 'label' => 'This Month'],
+                ['value' => 'lastmonth', 'label' => 'Last Month'],
+                ['value' => 'last3months', 'label' => 'Last 3 Months'],
+                ['value' => 'last6months', 'label' => 'Last 6 Months'],
+                ['value' => 'year', 'label' => 'This Year'],
+            ],
         ]);
     }
 }

@@ -29,13 +29,10 @@ class SolarSystemSeeder extends Seeder
             'current_production' => 0,      
             'current_consumption' => 0,     
             'overall_efficiency' => 0,      
-            'battery_level' => 78.5,       
             'total_charging' => 80.88,     
             'min_charging' => 3.0,         
             'max_charging' => 6.0,         
-            'power_usage' => 12.35,        
             'one_hour_usage' => 6.8,      
-            'yield' => 178,               
             'last_updated' => now()
         ]);
     }

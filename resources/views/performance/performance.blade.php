@@ -262,12 +262,16 @@
 										<h4 class="box-title">Generation Details</h4>
 										<ul class="box-controls pull-right d-md-flex d-none">
 											<li class="dropdown">
-												<button class="dropdown-toggle btn btn-warning-light px-10" data-bs-toggle="dropdown" aria-expanded="false">Today</button>
+												<button id="timeFrameButton" class="dropdown-toggle btn btn-warning-light px-10" data-bs-toggle="dropdown" aria-expanded="false">
+													Today
+												</button>
 												<div class="dropdown-menu dropdown-menu-right">
-													<a class="dropdown-item active" href="#">Today</a>
-													<a class="dropdown-item" href="#">Yesterday</a>
-													<a class="dropdown-item" href="#">Monthly</a>
-													<a class="dropdown-item" href="#">Last month</a>
+													<a class="dropdown-item active" href="#" data-timeframe="thismonth">This Month</a>
+													<a class="dropdown-item" href="#" data-timeframe="lastmonth">Last Month</a>
+													<a class="dropdown-item" href="#" data-timeframe="last3months">Last 3 Months</a>
+													<a class="dropdown-item" href="#" data-timeframe="last6months">Last 6 Months</a>
+													<a class="dropdown-item" href="#" data-timeframe="year">This Year</a>
+
 												</div>
 											</li>
 										</ul>
@@ -278,6 +282,7 @@
 								</div>
 							</div>
 						</div>
+
 					</div>
 
 					<div class="row">
@@ -338,70 +343,76 @@
 				const CONFIG = {
 					TIME_FRAMES: {
 						today: 'Today',
-						lastmonth: 'Last Month'
+						yesterday: 'Yesterday',
+						month: 'Monthly',
+						thismonth: 'This Month',
+						lastmonth: 'Last Month',
+						last3months: 'Last 3 Months',
+						last6months: 'Last 6 Months',
+						year: 'This Year'
 					},
 					CHART_HEIGHT: 300,
 					COLORS: ['#008ffb', '#00e396', '#feb019', '#ff4560'],
 					DEBOUNCE_MS: 300,
 					APEXCHARTS_MAX_ATTEMPTS: 20,
 					APEXCHARTS_INTERVAL_MS: 500,
-					WEATHER_REFRESH_INTERVAL: 1800000 // 30 minutes in milliseconds
+					WEATHER_REFRESH_INTERVAL: 1800000 // 30 minutes
 				};
 
-				// Chart instances
 				const charts = {
 					performance: null,
+					devicePerformance: null,
 					generation: null,
-					devicePerformance: null
+					powerStatistics: null
 				};
 
-				// Utility: Debounce function to prevent rapid calls
 				function debounce(fn, ms) {
 					let timeoutId;
-					return function(...args) {
+					return (...args) => {
 						clearTimeout(timeoutId);
 						timeoutId = setTimeout(() => fn.apply(this, args), ms);
 					};
 				}
 
-				// Utility: Fetch data from API
 				async function fetchData(endpoint, params = '') {
 					try {
-						const response = await fetch(`${endpoint}${params}`);
+						const response = await fetch(`${endpoint}${params}`, {
+							headers: {
+								'Accept': 'application/json'
+							}
+						});
 						if (!response.ok) {
-							const errorText = await response.text();
-							throw new Error(`API ${endpoint} failed: ${response.status} - ${errorText}`);
+							throw new Error(`API ${endpoint} failed: ${response.status}`);
 						}
-						return response.json();
+						return await response.json();
 					} catch (error) {
 						console.error(`Fetch error for ${endpoint}:`, error.message);
 						throw error;
 					}
 				}
 
-				// Utility: Update text content with unit
 				function updateTextContent(elementId, value, unit = '') {
 					const element = document.getElementById(elementId);
-					if (element) element.innerHTML = `${value} <small>${unit}</small>`;
-					else console.error(`Element #${elementId} not found`);
+					if (element) {
+						element.innerHTML = `${value} <small>${unit}</small>`;
+					} else {
+						console.warn(`Element #${elementId} not found`);
+					}
 				}
 
-				// Utility: Render ApexCharts
 				function renderChart(elementId, options, existingChart = null) {
-					const element = document.querySelector(`#${elementId}`);
+					const element = document.getElementById(elementId);
 					if (!element) {
-						console.error(`Chart container #${elementId} not found`);
+						console.warn(`Chart container #${elementId} not found`);
 						return null;
 					}
 					try {
 						element.innerHTML = '';
 						if (existingChart) {
-							console.log(`Destroying existing chart for ${elementId}`);
 							existingChart.destroy();
 						}
 						const chart = new ApexCharts(element, options);
 						chart.render();
-						console.log(`Chart rendered for ${elementId}`);
 						return chart;
 					} catch (error) {
 						console.error(`Error rendering chart ${elementId}:`, error);
@@ -409,34 +420,30 @@
 					}
 				}
 
-				// Utility: Update dropdown UI
 				function updateDropdownUI(timeFrame, dropdownButton, dropdownItems) {
-					if (!dropdownButton) {
-						console.error('Dropdown button not found');
-						return;
+					if (dropdownButton) {
+						dropdownButton.textContent = CONFIG.TIME_FRAMES[timeFrame.toLowerCase()] || timeFrame;
+						dropdownItems?.forEach(item => {
+							item.classList.toggle('active',
+								item.textContent.toLowerCase().replace(' ', '') === timeFrame.toLowerCase());
+						});
 					}
-					dropdownButton.textContent = CONFIG.TIME_FRAMES[timeFrame.toLowerCase()] || timeFrame;
-					dropdownItems.forEach(item => {
-						item.classList.toggle('active', item.textContent.toLowerCase().replace(' ', '') === timeFrame);
-					});
 				}
 
-				// Utility: Wait for ApexCharts to load
 				function waitForApexCharts(callback) {
 					let attempts = 0;
-					const checkApexCharts = setInterval(() => {
+					const interval = setInterval(() => {
 						attempts++;
 						if (typeof ApexCharts !== 'undefined') {
-							clearInterval(checkApexCharts);
+							clearInterval(interval);
 							callback();
 						} else if (attempts >= CONFIG.APEXCHARTS_MAX_ATTEMPTS) {
-							clearInterval(checkApexCharts);
-							console.error('ApexCharts not loaded after maximum attempts');
+							clearInterval(interval);
+							console.error('ApexCharts not loaded');
 						}
 					}, CONFIG.APEXCHARTS_INTERVAL_MS);
 				}
 
-				// Update weather forecast
 				async function updateWeatherForecast() {
 					const weatherDescElement = document.getElementById('weather-description');
 					const temperatureElement = document.getElementById('temperature');
@@ -449,9 +456,6 @@
 
 					try {
 						weatherDescElement.textContent = 'Loading...';
-						if (temperatureElement) temperatureElement.textContent = '';
-						if (cloudsElement) cloudsElement.textContent = '';
-
 						const data = await fetchData('/api/weather-forecast');
 
 						if (data.weather) {
@@ -460,66 +464,76 @@
 							if (cloudsElement) cloudsElement.textContent = `Cloud Cover: ${data.weather.clouds}%`;
 							console.log('Weather forecast updated successfully');
 						} else {
-							throw new Error('Invalid weather data format');
+							throw new Error('Invalid weather data');
 						}
 					} catch (error) {
-						console.error('Error updating weather forecast:', error.message);
-						weatherDescElement.textContent = 'Weather information unavailable';
+						weatherDescElement.textContent = 'Weather unavailable';
+						console.error('Weather update error:', error.message);
 					}
 				}
 
-				// Update UV intensity
 				async function updateUVIntensity() {
 					const uvIntensityElement = document.getElementById('uv-intensity');
-					const uvLevelElement = uvIntensityElement?.parentElement.querySelector('small.text-fade');
-
-					if (!uvIntensityElement || !uvLevelElement) {
-						console.error('UV intensity elements not found');
-						return;
-					}
+					const uvLevelElement = uvIntensityElement?.parentElement?.querySelector('small.text-fade');
+					if (!uvIntensityElement || !uvLevelElement) return;
 
 					try {
 						uvIntensityElement.textContent = 'Loading...';
 						uvLevelElement.textContent = 'Level: ...';
 
-						const response = await fetch('/uv-intensity');
-						const data = await response.json();
+						const data = await fetchData(`/api/uv-intensity?_=${Date.now()}`);
 
-						if (!response.ok) {
-							throw new Error(data.error || 'Failed to fetch data');
+						if (data.status !== 'success') {
+							throw new Error(data.error || 'Invalid UV data');
 						}
 
-						if (data.uvIndex !== undefined && data.uvIntensity) {
-							uvIntensityElement.textContent = data.uvIndex.toFixed(1);
-							uvLevelElement.textContent = `Level: ${data.uvIntensity}`;
-							console.log('UV intensity updated:', data);
-						} else {
-							throw new Error('Invalid UV data format');
-						}
+						uvIntensityElement.textContent = parseFloat(data.uvIndex).toFixed(1);
+						uvLevelElement.textContent = `Level: ${data.uvIntensity}`;
+
+						const levelColors = {
+							'Low': 'text-success',
+							'Moderate': 'text-warning',
+							'High': 'text-orange-500',
+							'Very High': 'text-danger',
+							'Extreme': 'text-danger'
+						};
+
+						Object.values(levelColors).forEach(color =>
+							uvIntensityElement.classList.remove(color));
+						uvIntensityElement.classList.add(levelColors[data.uvIntensity] || '');
+
+						// Remove reload button if present
+						const reloadBtn = document.getElementById('uv-reload');
+						if (reloadBtn) reloadBtn.remove();
 					} catch (error) {
-						console.error('Error fetching UV data:', error.message);
 						uvIntensityElement.textContent = 'N/A';
 						uvLevelElement.textContent = 'Level: Unavailable';
+
+						const parent = uvLevelElement.parentElement;
+						if (parent && !document.getElementById('uv-reload')) {
+							const reloadBtn = document.createElement('button');
+							reloadBtn.id = 'uv-reload';
+							reloadBtn.className = 'btn btn-sm btn-outline-secondary ms-2';
+							reloadBtn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+							reloadBtn.title = 'Retry UV data';
+							reloadBtn.addEventListener('click', updateUVIntensity);
+							parent.appendChild(reloadBtn);
+						}
 					}
 				}
 
-
-
-				// Update performance pie chart
 				const updatePerformanceChart = debounce(async (timeFrame = 'today') => {
 					try {
 						const data = await fetchData(`/api/performance-details?time_frame=${timeFrame}`);
-						const categories = Object.keys(data);
-						const values = Object.values(data);
-
 						const options = {
 							chart: {
 								type: 'pie',
 								height: CONFIG.CHART_HEIGHT
 							},
-							series: values,
-							labels: categories.map(cat => cat.charAt(0).toUpperCase() + cat.slice(1)),
-							colors: CONFIG.COLORS.slice(0, categories.length),
+							series: Object.values(data),
+							labels: Object.keys(data).map(cat =>
+								cat.charAt(0).toUpperCase() + cat.slice(1)),
+							colors: CONFIG.COLORS,
 							responsive: [{
 								breakpoint: 480,
 								options: {
@@ -532,60 +546,55 @@
 								}
 							}]
 						};
-
 						charts.performance = renderChart('basic-pie', options, charts.performance);
 					} catch (error) {
-						console.error('Error updating performance chart:', error.message);
+						console.error('Performance chart error:', error.message);
 					}
 				}, CONFIG.DEBOUNCE_MS);
 
-				// Update generation line chart
-				const updateGenerationChart = debounce(async (timeFrame = 'today') => {
+				const updateGenerationChart = debounce(async (timeFrame = 'month') => {
 					try {
-						const data = await fetchData(`/api/generation-details?time_frame=${timeFrame}`);
+						const response = await fetchData(`/api/generation-details?time_frame=${timeFrame}`);
+						if (!response?.data) throw new Error('Invalid generation data');
+
 						const options = {
 							chart: {
 								type: 'line',
 								height: CONFIG.CHART_HEIGHT
 							},
 							series: [{
-								name: 'Production',
-								data: data.production
-							}, {
-								name: 'Consumption',
-								data: data.consumption
-							}],
+									name: 'Production (mWh)',
+									data: response.data.map(d => d.total_production)
+								},
+								{
+									name: 'Consumption (mWh)',
+									data: response.data.map(d => d.total_consumption)
+								}
+							],
 							xaxis: {
-								categories: data.dates,
+								categories: response.data.map(d => d.month),
 								title: {
-									text: 'Date'
+									text: 'Time'
 								}
 							},
 							yaxis: {
 								title: {
-									text: 'kWh'
+									text: 'mWh'
 								}
 							},
-							colors: CONFIG.COLORS.slice(0, 2),
-							responsive: [{
-								breakpoint: 480,
-								options: {
-									chart: {
-										width: '100%'
-									},
-									legend: {
-										position: 'bottom'
-									}
+							colors: CONFIG.COLORS,
+							tooltip: {
+								y: {
+									formatter: val => `${val} mWh`
 								}
-							}]
+							}
 						};
 						charts.generation = renderChart('chart', options, charts.generation);
 					} catch (error) {
-						console.error('Error updating generation chart:', error.message);
+						console.error('Generation chart error:', error.message);
 					}
 				}, CONFIG.DEBOUNCE_MS);
 
-				// Update device performance bar chart
 				const updateDevicePerformanceChart = debounce(async (timeFrame = 'today') => {
 					try {
 						const data = await fetchData(`/api/device-performance?time_frame=${timeFrame}`);
@@ -596,10 +605,10 @@
 							},
 							series: [{
 								name: 'Performance',
-								data: data.devices.map(device => device.performance)
+								data: data.devices.map(d => d.performance)
 							}],
 							xaxis: {
-								categories: data.devices.map(device => device.name),
+								categories: data.devices.map(d => d.name),
 								title: {
 									text: 'Device'
 								}
@@ -624,11 +633,10 @@
 						};
 						charts.devicePerformance = renderChart('charts_widget_1_chart', options, charts.devicePerformance);
 					} catch (error) {
-						console.error('Error updating device performance chart:', error.message);
+						console.error('Device performance chart error:', error.message);
 					}
 				}, CONFIG.DEBOUNCE_MS);
 
-				// Update power statistics area chart
 				async function updatePowerStatistics() {
 					try {
 						const data = await fetchData('/api/power-statistics');
@@ -643,15 +651,18 @@
 								stacked: false
 							},
 							series: [{
-								name: 'Inverter Power',
-								data: [data.inverter_power]
-							}, {
-								name: 'Feed-in Power',
-								data: [data.feed_in_power]
-							}, {
-								name: 'Load Power',
-								data: [data.load_power]
-							}],
+									name: 'Inverter Power',
+									data: [data.inverter_power]
+								},
+								{
+									name: 'Feed-in Power',
+									data: [data.feed_in_power]
+								},
+								{
+									name: 'Load Power',
+									data: [data.load_power]
+								}
+							],
 							xaxis: {
 								categories: ['Latest'],
 								title: {
@@ -679,13 +690,12 @@
 								}
 							}]
 						};
-						renderChart('chart2', options);
+						charts.powerStatistics = renderChart('chart2', options, charts.powerStatistics);
 					} catch (error) {
-						console.error('Error updating power statistics:', error.message);
+						console.error('Power statistics error:', error.message);
 					}
 				}
 
-				// Initialize dashboard
 				function initializeDashboard() {
 					updatePowerStatistics();
 					updateWeatherForecast();
@@ -697,45 +707,39 @@
 					}, CONFIG.WEATHER_REFRESH_INTERVAL);
 
 					const chartConfigs = [{
-						id: 'basic-pie',
-						updateFn: updatePerformanceChart
-					}, {
-						id: 'chart',
-						updateFn: updateGenerationChart
-					}, {
-						id: 'charts_widget_1_chart',
-						updateFn: updateDevicePerformanceChart
-					}];
+							id: 'basic-pie',
+							updateFn: updatePerformanceChart
+						},
+						{
+							id: 'charts_widget_1_chart',
+							updateFn: updateDevicePerformanceChart
+						},
+						{
+							id: 'chart',
+							updateFn: updateGenerationChart
+						}
+					];
 
 					chartConfigs.forEach(({
 						id,
 						updateFn
 					}) => {
 						const chartElement = document.getElementById(id);
-						if (!chartElement) {
-							console.error(`Chart container #${id} not found`);
-							return;
-						}
+						if (!chartElement) return;
 
-						const dropdownButton = chartElement.closest('.box')?.querySelector('.dropdown-toggle');
-						const dropdownItems = chartElement.closest('.box')?.querySelectorAll('.dropdown-menu .dropdown-item');
+						const box = chartElement.closest('.box');
+						const dropdownButton = box?.querySelector('.dropdown-toggle');
+						const dropdownItems = box?.querySelectorAll('.dropdown-menu .dropdown-item');
 
-						if (!dropdownItems?.length) {
-							console.error(`No dropdown items found for chart ${id}`);
-							return;
-						}
-
-						const defaultTimeFrame = 'today';
+						const defaultTimeFrame = id === 'chart' ? 'month' : 'today';
 						updateDropdownUI(defaultTimeFrame, dropdownButton, dropdownItems);
 						updateFn(defaultTimeFrame);
 
-						dropdownItems.forEach(item => {
-							const newItem = item.cloneNode(true);
-							item.parentNode.replaceChild(newItem, item);
-							newItem.addEventListener('click', e => {
+						dropdownItems?.forEach(item => {
+							item.addEventListener('click', e => {
 								e.preventDefault();
-								const timeFrame = newItem.textContent.toLowerCase().replace(' ', '');
-								console.log(`Time frame changed for ${id}: ${timeFrame}`);
+								const timeFrame = item.dataset.timeframe ||
+									item.textContent.toLowerCase().replace(' ', '');
 								updateDropdownUI(timeFrame, dropdownButton, dropdownItems);
 								updateFn(timeFrame);
 							});

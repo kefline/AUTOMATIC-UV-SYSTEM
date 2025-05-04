@@ -11,14 +11,11 @@ class SystemStatus extends Model
         'current_production',
         'current_consumption',
         'overall_efficiency',
-        'battery_level',
         'last_updated',
         'total_charging',
         'min_charging',
         'max_charging',
-        'power_usage',
         'one_hour_usage',
-        'yield'
     ];
     
     protected $casts = [

@@ -306,18 +306,13 @@
 												<p class="mb-2"><span class="badge badge-dot bg-success"></span> Total Charging</p>
 												<h1 class="mb-2 mt-0" id="total-charging">--</h1>
 												<div class="d-flex align-items-center">
-													<div>
-														<p class="mb-0">Min <span class="text-danger" id="min-charging">--</span> <a href="#"><i class="fa-solid fa-sort-down"></i></a></p>
-													</div>
-													<div>
-														<p class="ms-10 mb-0">Max <span class="text-success" id="max-charging">--</span> <a href="#"><i class="fa-solid fa-sort-down"></i></a></p>
-													</div>
+													
 												</div>
 											</div>
 											<hr class="my-35">
 											<div>
 												<p class="mb-2"><span class="badge badge-dot bg-warning"></span> Power Usage</p>
-												<h1 class="mt-0 mb-2" id="power-usage">--</h1>
+												<!-- <h1 class="mt-0 mb-2" id="power-usage">--</h1> -->
 												<div>
 													<p class="mb-0">1 Hour usage <span class="fw-bold" id="one-hour-usage">--</span> kWh</p>
 												</div>
@@ -718,14 +713,14 @@
 						.then(data => {
 							// System Status
 							document.getElementById('system-efficiency').textContent = data.system_status.overall_efficiency + '%';
-							document.getElementById('power-generation').textContent = (data.system_status.current_production / 1000).toFixed(2) + ' kW';
-							document.getElementById('energy-consumed').textContent = (data.system_status.current_consumption / 1000).toFixed(2) + ' kWh';
+							document.getElementById('power-generation').textContent = data.system_status.current_production  + ' mW';
+							document.getElementById('energy-consumed').textContent = data.system_status.current_consumption + ' mWh';
 							document.getElementById('total-charging').textContent = data.system_status.total_charging + ' %';
-							document.getElementById('min-charging').textContent = data.system_status.min_charging + ' %';
-							document.getElementById('max-charging').textContent = data.system_status.max_charging + ' %';
-							document.getElementById('power-usage').textContent = data.system_status.power_usage + ' kWh';
-							document.getElementById('one-hour-usage').textContent = data.system_status.one_hour_usage + ' kWh';
-							document.getElementById('total-capacity').textContent = (data.system_status.total_capacity / 1000).toFixed(2) + ' kWh';
+							// document.getElementById('min-charging').textContent = data.system_status.min_charging + ' %';
+							// document.getElementById('max-charging').textContent = data.system_status.max_charging + ' %';
+							// document.getElementById('power-usage').textContent = data.system_status.power_usage + ' kWh';
+							document.getElementById('one-hour-usage').textContent = data.system_status.one_hour_usage + ' mWh';
+							document.getElementById('total-capacity').textContent = data.system_status.total_capacity  + ' mWh';
 
 							// Panel Status
 							document.getElementById('panel-status').textContent = data.panel_status.status;
@@ -737,7 +732,7 @@
 							const elements = [
 								'system-efficiency', 'power-generation', 'energy-consumed',
 								'total-charging', 'min-charging', 'max-charging',
-								'power-usage', 'one-hour-usage', 'total-capacity',
+								 'one-hour-usage', 'total-capacity',
 								 'panel-status', 'panel-angle'
 							];
 							elements.forEach(id => {
@@ -746,11 +741,9 @@
 						});
 				}
 
-				// Initial fetch
 				fetchDashboardData();
 
-				// Fetch every 5 seconds
-				setInterval(fetchDashboardData, 5000);
+				setInterval(fetchDashboardData, 1000);
 			});
 		</script>
 

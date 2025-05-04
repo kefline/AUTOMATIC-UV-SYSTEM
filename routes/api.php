@@ -35,4 +35,3 @@ Route::get('/generation-details', [DashboardController::class, 'getGenerationDet
 
 Route::get('/weather-forecast', [DashboardController::class, 'getWeatherForecast']);
 Route::get('/uv-intensity', [DashboardController::class, 'getUVIntensity']);
-
