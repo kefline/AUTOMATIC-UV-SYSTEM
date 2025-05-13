@@ -26,9 +26,9 @@ class SolarSystemSeeder extends Seeder
         
         SystemStatus::create([
             'total_capacity' => 210,      
-            'current_production' => 0,      
-            'current_consumption' => 0,     
-            'overall_efficiency' => 0,      
+            'current_production' => 95.5,      
+            'current_consumption' => 90,     
+            'overall_efficiency' => 100,      
             'total_charging' => 80.88,     
             'min_charging' => 3.0,         
             'max_charging' => 6.0,         
