@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -30,6 +31,8 @@ class DashboardController extends Controller
 
         $panel = SolarPanel::latest()->first();
 
+        $user = Auth::user();
+
         return response()->json([
             'system_status' => [
                 'total_capacity' => $status->total_capacity,
@@ -47,6 +50,10 @@ class DashboardController extends Controller
                 'status' => $panel?->status ?? 'Offline',
                 'current_angle' => $panel?->current_angle ?? 0,
                 'current_efficiency' => $panel?->current_efficiency ?? 0,
+            ],
+            'user' => [
+                'name' => $user?->name ?? 'Guest',
+                'email' => $user?->email ?? null,
             ],
         ]);
     }
@@ -162,66 +169,66 @@ class DashboardController extends Controller
         ]);
     }
 
-public function getUVIntensity()
-{
-    $cacheKey = 'uv_intensity_dar_es_salaam';
+    public function getUVIntensity()
+    {
+        $cacheKey = 'uv_intensity_dar_es_salaam';
 
-    try {
-        $data = Cache::remember($cacheKey, 900, function () {
-            Log::info('Fetching fresh UV data from OpenWeatherMap');
+        try {
+            $data = Cache::remember($cacheKey, 900, function () {
+                Log::info('Fetching fresh UV data from OpenWeatherMap');
 
-            $apiKey = env('OPENWEATHERMAP_API_KEY');
-            if (empty($apiKey)) {
-                Log::error('OpenWeatherMap API key is missing');
-                return ['error' => 'API key is missing'];
+                $apiKey = env('OPENWEATHERMAP_API_KEY');
+                if (empty($apiKey)) {
+                    Log::error('OpenWeatherMap API key is missing');
+                    return ['error' => 'API key is missing'];
+                }
+
+                // Use the UV Index API instead of One Call
+                $response = Http::timeout(15)->get('http://api.openweathermap.org/data/2.5/uvi', [
+                    'lat' => -6.7924,
+                    'lon' => 39.2083,
+                    'appid' => $apiKey,
+                ]);
+
+                if ($response->failed()) {
+                    Log::error('OpenWeatherMap API request failed', ['status' => $response->status(), 'body' => $response->body()]);
+                    return ['error' => 'Failed to fetch UV data'];
+                }
+
+                $responseData = $response->json();
+                Log::info('OpenWeatherMap Response', $responseData);
+
+                $uvIndex = data_get($responseData, 'value');
+                if (is_null($uvIndex)) {
+                    Log::warning('UV index not found in response', ['response' => $responseData]);
+                    return ['error' => 'UV index not found'];
+                }
+
+                $uvIndex = floatval($uvIndex);
+                $uvIntensity = $this->classifyUVIntensity($uvIndex);
+
+                return [
+                    'uvIndex' => $uvIndex,
+                    'uvIntensity' => $uvIntensity,
+                    'timestamp' => now()->toIso8601String(),
+                ];
+            });
+
+            if (isset($data['error'])) {
+                return response()->json(['error' => $data['error'], 'status' => 'error'], 500);
             }
 
-            // Use the UV Index API instead of One Call
-            $response = Http::timeout(15)->get('http://api.openweathermap.org/data/2.5/uvi', [
-                'lat' => -6.7924,
-                'lon' => 39.2083,
-                'appid' => $apiKey,
+            return response()->json([
+                'uvIndex' => $data['uvIndex'],
+                'uvIntensity' => $data['uvIntensity'],
+                'timestamp' => $data['timestamp'],
+                'status' => 'success',
             ]);
-
-            if ($response->failed()) {
-                Log::error('OpenWeatherMap API request failed', ['status' => $response->status(), 'body' => $response->body()]);
-                return ['error' => 'Failed to fetch UV data'];
-            }
-
-            $responseData = $response->json();
-            Log::info('OpenWeatherMap Response', $responseData);
-
-            $uvIndex = data_get($responseData, 'value');
-            if (is_null($uvIndex)) {
-                Log::warning('UV index not found in response', ['response' => $responseData]);
-                return ['error' => 'UV index not found'];
-            }
-
-            $uvIndex = floatval($uvIndex);
-            $uvIntensity = $this->classifyUVIntensity($uvIndex);
-
-            return [
-                'uvIndex' => $uvIndex,
-                'uvIntensity' => $uvIntensity,
-                'timestamp' => now()->toIso8601String(),
-            ];
-        });
-
-        if (isset($data['error'])) {
-            return response()->json(['error' => $data['error'], 'status' => 'error'], 500);
+        } catch (\Exception $e) {
+            Log::error('Exception in UV intensity API: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json(['error' => 'An unexpected error occurred', 'status' => 'error'], 500);
         }
-
-        return response()->json([
-            'uvIndex' => $data['uvIndex'],
-            'uvIntensity' => $data['uvIntensity'],
-            'timestamp' => $data['timestamp'],
-            'status' => 'success',
-        ]);
-    } catch (\Exception $e) {
-        Log::error('Exception in UV intensity API: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-        return response()->json(['error' => 'An unexpected error occurred', 'status' => 'error'], 500);
     }
-}
 
     private function classifyUVIntensity(float $index): string
     {

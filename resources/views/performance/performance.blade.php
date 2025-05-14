@@ -20,6 +20,152 @@
 	<link rel="stylesheet" href="/assets/css/skin_color.css">
 	<link rel="stylesheet" href="/assets/css/custom.css">
 	<link href="/assets/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+	<style>
+		/* New Chat Styles */
+		.chat-container {
+			position: fixed;
+			bottom: 20px;
+			right: 20px;
+			z-index: 1000;
+		}
+
+		.chat-toggle-btn {
+			width: 50px;
+			height: 50px;
+			border-radius: 50%;
+			background-color: #007bff;
+			color: white;
+			border: none;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+		}
+
+		.chat-window {
+			display: none;
+			width: 300px;
+			height: 400px;
+			background-color: white;
+			border-radius: 10px;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+			flex-direction: column;
+			overflow: hidden;
+		}
+
+		.chat-window.active {
+			display: flex;
+		}
+
+		.chat-header {
+			background-color: #007bff;
+			color: white;
+			padding: 10px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.chat-body {
+			flex: 1;
+			padding: 10px;
+			overflow-y: auto;
+			background-color: #f8f9fa;
+		}
+
+		.chat-message {
+			margin-bottom: 10px;
+			padding: 8px;
+			border-radius: 5px;
+		}
+
+		.chat-message.user {
+			background-color: #007bff;
+			color: white;
+			margin-left: 20%;
+			margin-right: 10px;
+		}
+
+		.chat-message.other {
+			background-color: #e9ecef;
+			margin-right: 20%;
+			margin-left: 10px;
+		}
+
+		.chat-input-area {
+			padding: 10px;
+			border-top: 1px solid #dee2e6;
+			display: flex;
+		}
+
+		.chat-input-area input {
+			flex: 1;
+			border: 1px solid #ced4da;
+			border-radius: 5px;
+			padding: 5px;
+			margin-right: 5px;
+		}
+
+		.chat-input-area button {
+			background-color: #007bff;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			padding: 5px 10px;
+			cursor: pointer;
+		}
+
+		/* New Notification Styles */
+		.notification-dropdown .dropdown-menu {
+			width: 300px;
+			padding: 0;
+			border: none;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+		}
+
+		.notification-header {
+			background-color: #f8f9fa;
+			padding: 10px;
+			border-bottom: 1px solid #dee2e6;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.notification-list {
+			max-height: 300px;
+			overflow-y: auto;
+			padding: 0;
+			margin: 0;
+			list-style: none;
+		}
+
+		.notification-item {
+			padding: 10px;
+			border-bottom: 1px solid #dee2e6;
+			display: flex;
+			align-items: center;
+		}
+
+		.notification-item:last-child {
+			border-bottom: none;
+		}
+
+		.notification-item i {
+			margin-right: 10px;
+		}
+
+		.notification-item:hover {
+			background-color: #f1f3f5;
+		}
+
+		.notification-footer {
+			padding: 10px;
+			text-align: center;
+			border-top: 1px solid #dee2e6;
+		}
+	</style>
 
 </head>
 
@@ -31,7 +177,6 @@
 		<header class="main-header">
 			<div class="d-flex align-items-center logo-box justify-content-end">
 				<img src="/assets/images/logomax.jpg" alt="" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover;">
-
 			</div>
 			<nav class="navbar navbar-static-top">
 				<div class="app-menu">
@@ -41,121 +186,88 @@
 								<i data-feather="menu"></i>
 							</a>
 						</li>
-
 					</ul>
 				</div>
-
 				<div class="navbar-custom-menu r-side">
 					<ul class="nav navbar-nav">
-						<li class="dropdown notifications-menu btn-group">
-							<label class="switch">
-								<a class="waves-effect waves-light btn-primary-light svg-bt-icon">
-									<input type="checkbox" data-mainsidebarskin="toggle" id="toggle_left_sidebar_skin">
-									<span class="switch-on"><i data-feather="moon"></i></span>
-									<span class="switch-off"><i data-feather="sun"></i></span>
-								</a>
-							</label>
-						</li>
-						<li class="dropdown notifications-menu btn-group ">
+						<li class="dropdown notifications-menu btn-group notification-dropdown">
 							<a href="#" class="waves-effect waves-light btn-primary-light svg-bt-icon" data-bs-toggle="dropdown" title="Notifications">
 								<i data-feather="bell"></i>
-								<div class="pulse-wave"></div>
+								<span class="badge badge-sm badge-danger" id="notification-count">3</span>
 							</a>
-							<ul class="dropdown-menu animated bounceIn">
-								<li class="header">
-									<div class="p-20">
-										<div class="flexbox">
-											<div>
-												<h4 class="mb-0 mt-0">Notifications</h4>
-											</div>
-											<div>
-												<a href="#" class="text-danger">Clear All</a>
-											</div>
-										</div>
-									</div>
+							<ul class="dropdown-menu animated fadeIn">
+								<li class="notification-header">
+									<h4 class="mb-0">Notifications</h4>
+									<a href="#" class="text-danger" id="clear-notifications">Clear All</a>
 								</li>
 								<li>
-									<ul class="menu sm-scrol">
-										<li>
-											<a href="#">
-												<i class="fa fa-users text-info"></i> Curabitur id eros quis nunc suscipit blandit.
-											</a>
+									<ul class="notification-list">
+										<li class="notification-item">
+											<i class="fa fa-info-circle text-info"></i>
+											System efficiency reached 85%
 										</li>
-										<li>
-											<a href="#">
-												<i class="fa fa-warning text-warning"></i> Duis malesuada justo eu sapien elementum, in semper diam posuere.
-											</a>
+										<li class="notification-item">
+											<i class="fa fa-warning text-warning"></i>
+											Low power generation detected
 										</li>
-										<li>
-											<a href="#">
-												<i class="fa fa-users text-danger"></i> Donec at nisi sit amet tortor commodo porttitor pretium a erat.
-											</a>
-										</li>
-										<li>
-											<a href="#">
-												<i class="fa fa-shopping-cart text-success"></i> In gravida mauris et nisi
-											</a>
-										</li>
-										<li>
-											<a href="#">
-												<i class="fa fa-user text-danger"></i> Praesent eu lacus in libero dictum fermentum.
-											</a>
-										</li>
-										<li>
-											<a href="#">
-												<i class="fa fa-user text-primary"></i> Nunc fringilla lorem
-											</a>
-										</li>
-										<li>
-											<a href="#">
-												<i class="fa fa-user text-success"></i> Nullam euismod dolor ut quam interdum, at scelerisque ipsum imperdiet.
-											</a>
+										<li class="notification-item">
+											<i class="fa fa-check-circle text-success"></i>
+											Maintenance scheduled
 										</li>
 									</ul>
 								</li>
-								<li class="footer">
-									<a href="component_notification.html">View all</a>
+								<li class="notification-footer">
+									<a href="#">View All Notifications</a>
 								</li>
 							</ul>
 						</li>
 						<li class="btn-group nav-item d-xl-inline-flex d-none">
-							<a href="#" class="waves-effect waves-light nav-link btn-primary-light svg-bt-icon" title="" id="live-chat">
-								<i data-feather="message-circle"></i>
-							</a>
-						</li>
-
-						<li class="btn-group d-xl-inline-flex d-none">
-							<a href="#" class="waves-effect waves-light nav-link btn-primary-light svg-bt-icon dropdown-toggle" data-bs-toggle="dropdown">
-								<img class="rounded" src="https://solar-admin-template.multipurposethemes.com/bs5/images/svg-icon/usa.svg" alt="">
+							<a href="#"
+								class="waves-effect waves-light nav-link btn-primary-light svg-bt-icon dropdown-toggle"
+								data-bs-toggle="dropdown">
+								<img class="rounded"
+									src="https://solar-admin-template.multipurposethemes.com/bs5/images/svg-icon/usa.svg"
+									alt="">
 							</a>
 							<div class="dropdown-menu">
-								<a class="dropdown-item my-5" href="#"><img class="w-20 rounded me-10" src="https://solar-admin-template.multipurposethemes.com/bs5/images/svg-icon/usa.svg" alt=""> English</a>
-								<a class="dropdown-item my-5" href="#"><img class="w-20 rounded me-10" src="https://solar-admin-template.multipurposethemes.com/bs5/images/svg-icon/spain.svg" alt=""> Spanish</a>
-								<a class="dropdown-item my-5" href="#"><img class="w-20 rounded me-10" src="https://solar-admin-template.multipurposethemes.com/bs5/images/svg-icon/ger.svg" alt=""> German</a>
-								<a class="dropdown-item my-5" href="#"><img class="w-20 rounded me-10" src="https://solar-admin-template.multipurposethemes.com/bs5/images/svg-icon/jap.svg" alt=""> Japanese</a>
-								<a class="dropdown-item my-5" href="#"><img class="w-20 rounded me-10" src="https://solar-admin-template.multipurposethemes.com/bs5/images/svg-icon/fra.svg" alt=""> French</a>
+								<a class="dropdown-item my-5" href="#"><img class="w-20 rounded me-10"
+										src="https://solar-admin-template.multipurposethemes.com/bs5/images/svg-icon/usa.svg"
+										alt=""> English</a>
+								<a class="dropdown-item my-5" href="#"><img class="w-20 rounded me-10"
+										src="https://solar-admin-template.multipurposethemes.com/bs5/images/svg-icon/spain.svg"
+										alt=""> Spanish</a>
+								<a class="dropdown-item my-5" href="#"><img class="w-20 rounded me-10"
+										src="https://solar-admin-template.multipurposethemes.com/bs5/images/svg-icon/ger.svg"
+										alt=""> German</a>
+								<a class="dropdown-item my-5" href="#"><img class="w-20 rounded me-10"
+										src="https://solar-admin-template.multipurposethemes.com/bs5/images/svg-icon/jap.svg"
+										alt=""> Japanese</a>
+								<a class="dropdown-item my-5" href="#"><img class="w-20 rounded me-10"
+										src="https://solar-admin-template.multipurposethemes.com/bs5/images/svg-icon/fra.svg"
+										alt=""> French</a>
 							</div>
 						</li>
-
 						<li class="btn-group nav-item d-xl-inline-flex d-none">
-							<a href="#" data-provide="fullscreen" class="waves-effect waves-light nav-link btn-primary-light svg-bt-icon" title="Full Screen">
+							<a href="#" data-provide="fullscreen"
+								class="waves-effect waves-light nav-link btn-primary-light svg-bt-icon"
+								title="Full Screen">
 								<i data-feather="maximize"></i>
 							</a>
 						</li>
-						<!-- Control Sidebar Toggle Button -->
 						<li class="btn-group nav-item d-xl-inline-flex d-none">
-							<a href="#" data-toggle="control-sidebar" title="Setting" class="waves-effect waves-light nav-link btn-primary-light svg-bt-icon">
+							<a href="#" data-toggle="control-sidebar" title="Setting"
+								class="waves-effect waves-light nav-link btn-primary-light svg-bt-icon">
 								<i data-feather="sliders"></i>
 							</a>
 						</li>
-
-						<!-- User Account-->
 						<li class="dropdown user user-menu">
-							<a href="#" class="waves-effect waves-light dropdown-toggle w-auto l-h-12 bg-transparent p-0 no-shadow" title="User" data-bs-toggle="modal" data-bs-target="#quick_user_toggle">
-								<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/avatar-13.png" class="avatar rounded-circle bg-primary-light h-40 w-40" alt="" />
+							<a href="#"
+								class="waves-effect waves-light dropdown-toggle w-auto l-h-12 bg-transparent p-0 no-shadow"
+								title="User" data-bs-toggle="modal" data-bs-target="#quick_user_toggle">
+								<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/avatar-13.png"
+									class="avatar rounded-circle bg-primary-light h-40 w-40" alt="" />
 							</a>
 						</li>
-
 					</ul>
 				</div>
 			</nav>
@@ -765,7 +877,7 @@
 			</script>
 		</footer>
 
-		<div class="modal modal-right fade" id="quick_user_toggle" tabindex="-1">
+		<!-- <div class="modal modal-right fade" id="quick_user_toggle" tabindex="-1">
 			<div class="modal-dialog">
 				<div class="modal-content slim-scroll3">
 					<div class="modal-body p-30 bg-white">
@@ -835,113 +947,30 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</div>
-	<div id="chat-box-body">
-		<div id="chat-circle" class="waves-effect waves-circle btn btn-circle btn-sm btn-warning l-h-50">
-			<div id="chat-overlay"></div>
-			<span class="icon-Group-chat fs-18"><span class="path1"></span><span class="path2"></span></span>
-		</div>
-
-		<div class="chat-box">
-			<div class="chat-box-header p-15 d-flex justify-content-between align-items-center">
-				<div class="btn-group">
-					<button class="waves-effect waves-circle btn btn-circle btn-primary-light h-40 w-40 rounded-circle l-h-50" type="button" data-bs-toggle="dropdown">
-						<span class="icon-Add-user fs-22"><span class="path1"></span><span class="path2"></span></span>
-					</button>
-					<div class="dropdown-menu min-w-200">
-						<a class="dropdown-item fs-16" href="#">
-							<span class="icon-Color me-15"></span>
-							New Group</a>
-						<a class="dropdown-item fs-16" href="#">
-							<span class="icon-Clipboard me-15"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></span>
-							Contacts</a>
-						<a class="dropdown-item fs-16" href="#">
-							<span class="icon-Group me-15"><span class="path1"></span><span class="path2"></span></span>
-							Groups</a>
-						<a class="dropdown-item fs-16" href="#">
-							<span class="icon-Active-call me-15"><span class="path1"></span><span class="path2"></span></span>
-							Calls</a>
-						<a class="dropdown-item fs-16" href="#">
-							<span class="icon-Settings1 me-15"><span class="path1"></span><span class="path2"></span></span>
-							Settings</a>
-						<div class="dropdown-divider"></div>
-						<a class="dropdown-item fs-16" href="#">
-							<span class="icon-Question-circle me-15"><span class="path1"></span><span class="path2"></span></span>
-							Help</a>
-						<a class="dropdown-item fs-16" href="#">
-							<span class="icon-Notifications me-15"><span class="path1"></span><span class="path2"></span></span>
-							Privacy</a>
-					</div>
+	<div class="chat-container">
+		<button class="chat-toggle-btn" id="chat-toggle-btn">
+			<i class="fa fa-comment"></i>
+		</button>
+		<div class="chat-window" id="chat-window">
+			<div class="chat-header">
+				<span>Chat</span>
+				<button class="chat-toggle-btn" id="chat-close-btn">
+					<i class="fa fa-times"></i>
+				</button>
+			</div>
+			<div class="chat-body" id="chat-body">
+				<div class="chat-message other">
+					How is your solar system doing?
 				</div>
-				<div class="text-center flex-grow-1">
-					<div class="text-dark fs-18">Mayra Sibley</div>
-					<div>
-						<span class="badge badge-sm badge-dot badge-primary"></span>
-						<span class="text-muted fs-12">Active</span>
-					</div>
-				</div>
-				<div class="chat-box-toggle">
-					<button id="chat-box-toggle" class="waves-effect waves-circle btn btn-circle btn-danger-light h-40 w-40 rounded-circle l-h-50" type="button">
-						<span class="icon-Close fs-22"><span class="path1"></span><span class="path2"></span></span>
-					</button>
+				<div class="chat-message user">
+					Just checking in!
 				</div>
 			</div>
-			<div class="chat-box-body">
-				<div class="chat-box-overlay">
-				</div>
-				<div class="chat-logs">
-					<div class="chat-msg user">
-						<div class="d-flex align-items-center">
-							<span class="msg-avatar">
-								<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/2.jpg" class="avatar avatar-lg" alt="">
-							</span>
-							<div class="mx-10">
-								<a href="#" class="text-dark hover-primary fw-bold">Mayra Sibley</a>
-								<p class="text-muted fs-12 mb-0">2 Hours</p>
-							</div>
-						</div>
-						<div class="cm-msg-text">
-							Hi there, I'm Jesse and you?
-						</div>
-					</div>
-					<div class="chat-msg self">
-						<div class="d-flex align-items-center justify-content-end">
-							<div class="mx-10">
-								<a href="#" class="text-dark hover-primary fw-bold">You</a>
-								<p class="text-muted fs-12 mb-0">3 minutes</p>
-							</div>
-							<span class="msg-avatar">
-								<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/3.jpg" class="avatar avatar-lg" alt="">
-							</span>
-						</div>
-						<div class="cm-msg-text">
-							My name is Anne Clarc.
-						</div>
-					</div>
-					<div class="chat-msg user">
-						<div class="d-flex align-items-center">
-							<span class="msg-avatar">
-								<img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/2.jpg" class="avatar avatar-lg" alt="">
-							</span>
-							<div class="mx-10">
-								<a href="#" class="text-dark hover-primary fw-bold">Mayra Sibley</a>
-								<p class="text-muted fs-12 mb-0">40 seconds</p>
-							</div>
-						</div>
-						<div class="cm-msg-text">
-							Nice to meet you Anne.<br>How can i help you?
-						</div>
-					</div>
-				</div><!--chat-log -->
-			</div>
-			<div class="chat-input">
-				<form>
-					<input type="text" id="chat-input" placeholder="Send a message..." />
-					<button type="submit" class="chat-submit" id="chat-submit">
-						<span class="icon-Send fs-22"></span>
-					</button>
-				</form>
+			<div class="chat-input-area">
+				<input type="text" id="chat-input" placeholder="Type a message...">
+				<button id="chat-send-btn">Send</button>
 			</div>
 		</div>
 	</div>

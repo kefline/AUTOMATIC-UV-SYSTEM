@@ -560,7 +560,7 @@
             <div class="pull-right d-none d-sm-inline-block"></div>
             © <script>document.write(new Date().getFullYear())</script>
         </footer>
-        <div class="modal modal-right fade" id="quick_user_toggle" tabindex="-1">
+        <!-- <div class="modal modal-right fade" id="quick_user_toggle" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content slim-scroll3">
                     <div class="modal-body p-30 bg-white">
@@ -592,7 +592,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- New Chat Section -->
         <div class="chat-container">
             <button class="chat-toggle-btn" id="chat-toggle-btn">
@@ -667,35 +667,61 @@
 
                 // Existing Dashboard Data Fetch
                 function fetchDashboardData() {
-                    fetch('/api/system/dashboard')
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            document.getElementById('system-efficiency').textContent = data.system_status.overall_efficiency + '%';
-                            document.getElementById('power-generation').textContent = data.system_status.current_production + ' mW';
-                            document.getElementById('energy-consumed').textContent = data.system_status.current_consumption + ' mWh';
-                            document.getElementById('total-charging').textContent = data.system_status.total_charging + ' %';
-                            document.getElementById('one-hour-usage').textContent = data.system_status.one_hour_usage + ' mWh';
-                            document.getElementById('total-capacity').textContent = data.system_status.total_capacity + ' mWh';
-                            document.getElementById('panel-status').textContent = data.panel_status.status;
-                            document.getElementById('panel-angle').textContent = data.panel_status.current_angle + '°';
-                        })
-                        .catch(error => {
-                            console.error('Error fetching dashboard data:', error);
-                            const elements = [
-                                'system-efficiency', 'power-generation', 'energy-consumed',
-                                'total-charging', 'one-hour-usage', 'total-capacity',
-                                'panel-status', 'panel-angle'
-                            ];
-                            elements.forEach(id => {
-                                document.getElementById(id).textContent = 'Error';
-                            });
-                        });
-                }
+    fetch('/api/system/dashboard')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Update system and panel status
+            document.getElementById('system-efficiency').textContent = data.system_status.overall_efficiency + '%';
+            document.getElementById('power-generation').textContent = data.system_status.current_production + ' mW';
+            document.getElementById('energy-consumed').textContent = data.system_status.current_consumption + ' mWh';
+            document.getElementById('total-charging').textContent = data.system_status.total_charging + ' %';
+            document.getElementById('one-hour-usage').textContent = data.system_status.one_hour_usage + ' mWh';
+            document.getElementById('total-capacity').textContent = data.system_status.total_capacity + ' mWh';
+            document.getElementById('panel-status').textContent = data.panel_status.status;
+            document.getElementById('panel-angle').textContent = data.panel_status.current_angle + '°';
+
+            // Update user information
+            const userMenuLink = document.querySelector('.user-menu a');
+            const userNameSpan = document.querySelector('.user-menu .user-name');
+            
+            // Update the name in the dropdown
+            if (userNameSpan) {
+                userNameSpan.textContent = data.user.name;
+            }
+            if (userMenuLink) {
+                userMenuLink.title = data.user.name; // Update tooltip
+            }
+
+            // Update email (e.g., in a modal or another element)
+            const userEmailElement = document.querySelector('#quick_user_toggle .user-email');
+            if (userEmailElement) {
+                userEmailElement.textContent = data.user.email || 'No email';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching dashboard data:', error);
+            const elements = [
+                'system-efficiency', 'power-generation', 'energy-consumed',
+                'total-charging', 'one-hour-usage', 'total-capacity',
+                'panel-status', 'panel-angle'
+            ];
+            elements.forEach(id => {
+                document.getElementById(id).textContent = 'Error';
+            });
+            // Handle user data error
+            const userNameSpan = document.querySelector('.user-menu .user-name');
+            const userMenuLink = document.querySelector('.user-menu a');
+            const userEmailElement = document.querySelector('#quick_user_toggle .user-email');
+            if (userNameSpan) userNameSpan.textContent = 'Error';
+            if (userMenuLink) userMenuLink.title = 'Error';
+            if (userEmailElement) userEmailElement.textContent = 'Error';
+        });
+}
 
                 fetchDashboardData();
                 setInterval(fetchDashboardData, 1000);
