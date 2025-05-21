@@ -560,7 +560,7 @@
             <div class="pull-right d-none d-sm-inline-block"></div>
             © <script>document.write(new Date().getFullYear())</script>
         </footer>
-        <!-- <div class="modal modal-right fade" id="quick_user_toggle" tabindex="-1">
+        <div class="modal modal-right fade" id="quick_user_toggle" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content slim-scroll3">
                     <div class="modal-body p-30 bg-white">
@@ -592,7 +592,7 @@
                     </div>
                 </div>
             </div>
-        </div> -->
+        </div>
         <!-- New Chat Section -->
         <div class="chat-container">
             <button class="chat-toggle-btn" id="chat-toggle-btn">
