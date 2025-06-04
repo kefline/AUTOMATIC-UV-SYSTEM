@@ -89,4 +89,9 @@ class User extends Authenticatable
     {
         return $this->last_seen !== null && $this->last_seen->gt(now()->subMinutes(5));
     }
+
+    public function settings()
+    {
+        return $this->hasOne(UserSettings::class);
+    }
 }

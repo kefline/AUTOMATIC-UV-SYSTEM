@@ -9,21 +9,22 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Role;
-
 use App\Mail\PasswordResetMail;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
 
 class AuthController extends Controller
 {
-
     public function login()
     {
+        if (Auth::check()) {
+            return redirect()->route('Admin.index');
+        }
         $roles = Role::all();
         return view('Auth.login', compact('roles'));
     }
 
-
     public function authenticate(Request $request)
-
     {
         $request->validate([
             'email' => 'required|email',
@@ -43,20 +44,18 @@ class AuthController extends Controller
         return back()->withErrors(['error' => 'Invalid email, password, or role.']);
     }
 
-
-
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
-        return redirect()->route('Auth.login');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('login');
     }
-
 
     public function showForgotPasswordForm()
     {
         return view('Auth.forgot-password');
     }
-
 
     public function sendResetLink(Request $request)
     {
@@ -64,16 +63,44 @@ class AuthController extends Controller
             'email' => 'required|email|exists:users,email',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
 
-        $newPassword = Str::random(8);
-        $user->update([
-            'password' => Hash::make($newPassword),
+        return $status === Password::RESET_LINK_SENT
+            ? back()->with(['status' => __($status)])
+            : back()->withErrors(['email' => __($status)]);
+    }
+
+    public function showResetForm(Request $request, $token)
+    {
+        return view('Auth.reset-password', ['token' => $token, 'email' => $request->email]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
         ]);
 
-        Mail::to($user->email)->send(new PasswordResetMail($user, $newPassword));
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
 
-        return back()->with('success', 'A new password has been sent to your email address.');
+                $user->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        return $status === Password::PASSWORD_RESET
+            ? redirect()->route('login')->with('status', __($status))
+            : back()->withErrors(['email' => [__($status)]]);
     }
 
     public function h3ello()

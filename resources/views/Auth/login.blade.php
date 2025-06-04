@@ -46,7 +46,7 @@
                                 @endif
 
                                 <form
-                                    action="{{route('Auth.authenticate')}}"
+                                    action="{{route('login.authenticate')}}"
                                     method="post">
                                     @csrf
                                     <div class="form-group">

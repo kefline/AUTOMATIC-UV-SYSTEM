@@ -16,7 +16,260 @@
     <link rel="stylesheet" href="/assets/css/custom.css">
     <link href="/assets/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
     <style>
-        /* New Chat Styles */
+        :root {
+            --primary-color: #2196F3;
+            --secondary-color: #FF9800;
+            --success-color: #4CAF50;
+            --danger-color: #f44336;
+            --warning-color: #FFC107;
+            --info-color: #00BCD4;
+            --dark-color: #212121;
+            --light-color: #f5f5f5;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Global Styles */
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            font-family: 'Poppins', sans-serif;
+            padding-top: 70px;
+        }
+
+        /* Header Styles */
+        .main-header {
+            background: white;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header-scroll-up {
+            transform: translateY(0);
+        }
+
+        .header-scroll-down {
+            transform: translateY(-100%);
+        }
+
+        /* Sidebar Styles */
+        .main-sidebar {
+            background: white;
+            box-shadow: 2px 0 10px var(--shadow-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 999;
+            top: 70px;
+            transition: all 0.3s ease;
+            width: 250px;
+        }
+
+        .sidebar-menu {
+            padding: 1rem;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            color: var(--dark-color);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .sidebar-menu a:hover {
+            background: var(--light-color);
+            color: var(--primary-color);
+        }
+
+        .sidebar-menu a i {
+            margin-right: 10px;
+        }
+
+        /* Content Styles */
+        .content-wrapper {
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        /* Card Styles */
+        .box {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .box:hover {
+            transform: translateY(-5px);
+        }
+
+        .box-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .box-body {
+            padding: 1.25rem;
+        }
+
+        /* Stats Cards */
+        .stats-card {
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stats-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        /* Button Styles */
+        .btn-primary-light {
+            background: rgba(33, 150, 243, 0.1);
+            color: var(--primary-color);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-light:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Table Styles */
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            background-color: transparent;
+        }
+
+        .table th {
+            padding: 1rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .table td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(0,0,0,0.02);
+        }
+
+        /* Badge Styles */
+        .badge {
+            padding: 0.5em 1em;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+        }
+
+        .badge-warning {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: var(--warning-color);
+        }
+
+        .badge-danger {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--danger-color);
+        }
+
+        /* Chart Container Styles */
+        .chart-container {
+            padding: 1rem;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 2px 10px var(--shadow-color);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 991.98px) {
+            .content-wrapper {
+                margin-left: 0;
+            }
+            
+            .sidebar-open .content-wrapper {
+                transform: translateX(250px);
+            }
+
+            .main-sidebar {
+                transform: translateX(-250px);
+            }
+
+            .sidebar-open .main-sidebar {
+                transform: translateX(0);
+            }
+        }
+
+        /* Animation Styles */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Chat Feature Styles */
         .chat-container {
             position: fixed;
             bottom: 20px;
@@ -28,23 +281,33 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background-color: #007bff;
+            background: var(--primary-color);
             color: white;
             border: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .chat-toggle-btn:hover {
+            transform: scale(1.1);
+            background: var(--primary-color);
         }
 
         .chat-window {
-            display: none;
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
             width: 300px;
             height: 400px;
-            background-color: white;
+            background: white;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
             flex-direction: column;
             overflow: hidden;
         }
@@ -54,9 +317,9 @@
         }
 
         .chat-header {
-            background-color: #007bff;
+            padding: 15px;
+            background: var(--primary-color);
             color: white;
-            padding: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -64,103 +327,159 @@
 
         .chat-body {
             flex: 1;
-            padding: 10px;
+            padding: 15px;
             overflow-y: auto;
-            background-color: #f8f9fa;
         }
 
         .chat-message {
             margin-bottom: 10px;
-            padding: 8px;
-            border-radius: 5px;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+            position: relative;
         }
 
         .chat-message.user {
-            background-color: #007bff;
+            background: var(--primary-color);
             color: white;
-            margin-left: 20%;
-            margin-right: 10px;
+            margin-left: auto;
+            border-bottom-right-radius: 2px;
         }
 
         .chat-message.other {
-            background-color: #e9ecef;
-            margin-right: 20%;
-            margin-left: 10px;
+            background: #f0f0f0;
+            color: #333;
+            margin-right: auto;
+            border-bottom-left-radius: 2px;
+        }
+
+        .chat-message .message-content {
+            margin-bottom: 4px;
+            word-wrap: break-word;
+        }
+
+        .chat-message .message-time {
+            font-size: 0.75rem;
+            color: rgba(0, 0, 0, 0.5);
+            text-align: right;
+        }
+
+        .chat-message.user .message-time {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .chat-message.unread {
+            position: relative;
+        }
+
+        .chat-message.unread::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
         .chat-input-area {
-            padding: 10px;
-            border-top: 1px solid #dee2e6;
+            padding: 15px;
+            border-top: 1px solid #eee;
             display: flex;
+            gap: 10px;
         }
 
         .chat-input-area input {
             flex: 1;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            padding: 5px;
-            margin-right: 5px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
         }
 
         .chat-input-area button {
-            background-color: #007bff;
+            padding: 8px 15px;
+            background: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 5px;
-            padding: 5px 10px;
+            border-radius: 20px;
             cursor: pointer;
         }
 
-        /* New Notification Styles */
-        .notification-dropdown .dropdown-menu {
-            width: 300px;
-            padding: 0;
-            border: none;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        .chat-input-area button:hover {
+            background: var(--primary-color);
+            opacity: 0.9;
         }
 
-        .notification-header {
-            background-color: #f8f9fa;
-            padding: 10px;
-            border-bottom: 1px solid #dee2e6;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .notification-list {
-            max-height: 300px;
+        .chat-users-list {
+            max-height: 200px;
             overflow-y: auto;
-            padding: 0;
-            margin: 0;
-            list-style: none;
+            border-bottom: 1px solid #eee;
         }
 
-        .notification-item {
-            padding: 10px;
-            border-bottom: 1px solid #dee2e6;
+        .chat-user {
             display: flex;
             align-items: center;
-        }
-
-        .notification-item:last-child {
-            border-bottom: none;
-        }
-
-        .notification-item i {
-            margin-right: 10px;
-        }
-
-        .notification-item:hover {
-            background-color: #f1f3f5;
-        }
-
-        .notification-footer {
             padding: 10px;
-            text-align: center;
-            border-top: 1px solid #dee2e6;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .chat-user:hover {
+            background-color: #f8f9fa;
+        }
+
+        .chat-user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            overflow: hidden;
+        }
+
+        .chat-user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .chat-user-info {
+            flex: 1;
+        }
+
+        .chat-user-name {
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .chat-user-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ccc;
+            display: inline-block;
+        }
+
+        .chat-user-status.online {
+            background: #4CAF50;
+        }
+
+        #unread-count {
+            top: -5px;
+            right: -5px;
+            font-size: 0.75rem;
+            padding: 2px 6px;
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body class="hold-transition light-skin sidebar-mini theme-primary fixed">
@@ -253,12 +572,41 @@
                             </a>
                         </li>
                         <li class="dropdown user user-menu">
-                            <a href="#"
-                                class="waves-effect waves-light dropdown-toggle w-auto l-h-12 bg-transparent p-0 no-shadow"
-                                title="User" data-bs-toggle="modal" data-bs-target="#quick_user_toggle">
-                                <img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/avatar-13.png"
-                                    class="avatar rounded-circle bg-primary-light h-40 w-40" alt="" />
+                            <a href="#" class="waves-effect waves-light dropdown-toggle w-auto l-h-12 bg-transparent p-0 no-shadow d-flex align-items-center" data-bs-toggle="dropdown">
+                                @if(auth()->user()->profile_photo)
+                                    <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" 
+                                        class="avatar rounded-circle bg-primary-light h-40 w-40" 
+                                        alt="{{ auth()->user()->name }}" 
+                                        style="object-fit: cover;" />
+                                @else
+                                    <div class="avatar rounded-circle bg-primary d-flex align-items-center justify-content-center h-40 w-40">
+                                        <span class="text-white fw-bold" style="font-size: 1.2rem;">
+                                            {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                                        </span>
+                                    </div>
+                                @endif
+                                <div class="ms-2">
+                                    <h6 class="mb-0 fw-semibold" style="font-size: 15px;">{{ auth()->user()->name }}</h6>
+                                    <p class="mb-0 text-muted" style="font-size: 12px;">{{ auth()->user()->role ? auth()->user()->role->name : 'User' }}</p>
+                                </div>
                             </a>
+                            <ul class="dropdown-menu animated flipInX">
+                                <li class="user-body">
+                                    <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                                        <i class="fa fa-user text-muted me-2"></i> Profile
+                                    </a>
+                                    <a class="dropdown-item" href="{{ route('profile.settings') }}">
+                                        <i class="fa fa-cog text-muted me-2"></i> Settings
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="fa fa-power-off text-muted me-2"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </div>
@@ -296,7 +644,7 @@
                 </div>
             </section>
         </aside>
-
+        
         <div class="content-wrapper">
             <div class="container-full">
                 <section class="content">
@@ -635,31 +983,84 @@
             <div class="modal-dialog">
                 <div class="modal-content slim-scroll3">
                     <div class="modal-body p-30 bg-white">
+                        <div class="d-flex align-items-center justify-content-between pb-30">
+                            <h4 class="m-0">User Profile</h4>
+                            <a href="#" class="btn btn-icon btn-danger-light btn-sm no-shadow" data-bs-dismiss="modal">
+                                <span class="fa fa-close"></span>
+                            </a>
+                        </div>
                         <div>
                             <div class="d-flex flex-row">
-                                <div><img src="https://solar-admin-template.multipurposethemes.com/bs5/images/avatar/avatar-13.png" alt="user" class="rounded bg-danger-light w-150" width="100"></div>
+                                <div class="position-relative">
+                                    @if(auth()->user()->profile_photo)
+                                        <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" alt="user" 
+                                            class="rounded-circle bg-primary-light" style="width: 100px; height: 100px; object-fit: cover;">
+                                    @else
+                                        <div class="rounded-circle bg-primary-light d-flex align-items-center justify-content-center text-white"
+                                            style="width: 100px; height: 100px; font-size: 2.5rem;">
+                                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                        </div>
+                                    @endif
+                                    <span class="position-absolute bottom-0 end-0 bg-success rounded-circle p-1"
+                                        style="width: 12px; height: 12px;" title="Online"></span>
+                                </div>
                                 <div class="ps-20">
-                                    <h5 class="mb-0">Nil Yeager</h5>
-                                    <p class="my-5 text-fade">Manager</p>
-                                    <a href="mailto:dummy@gmail.com"><span class="icon-Mail-notification me-5 text-success"><span class="path1"></span><span class="path2"></span></span> dummy@gmail.com</a>
+                                    <h5 class="mb-0">{{ auth()->user()->name }}</h5>
+                                    <p class="my-5 text-fade">{{ auth()->user()->role ? auth()->user()->role->name : 'User' }}</p>
+                                    <a href="mailto:{{ auth()->user()->email }}">
+                                        <span class="icon-Mail-notification me-5 text-success">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </span> 
+                                        {{ auth()->user()->email }}
+                                    </a>
                                 </div>
                             </div>
                         </div>
                         <div class="dropdown-divider my-30"></div>
                         <div>
                             <div class="d-flex align-items-center mb-30">
-                                <div class="me-15 bg-info-light h-50 w-50 l-h-60 rounded text-center">
-                                    <span class="icon-Attachment1 fs-24"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></span>
+                                <div class="me-15 bg-primary-light h-50 w-50 l-h-60 rounded text-center">
+                                    <span class="icon-Library fs-24">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                    </span>
                                 </div>
                                 <div class="d-flex flex-column fw-500">
-                                    <form action="{{ route('logout') }}" method="POST">
+                                    <a href="{{ route('profile.edit') }}" class="text-dark hover-primary mb-1 fs-16">Edit Profile</a>
+                                    <span class="text-fade">Update your profile information</span>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-30">
+                                <div class="me-15 bg-success-light h-50 w-50 l-h-60 rounded text-center">
+                                    <span class="icon-Group-chat fs-24">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                    </span>
+                                </div>
+                                <div class="d-flex flex-column fw-500">
+                                    <a href="{{ route('profile.settings') }}" class="text-dark hover-success mb-1 fs-16">Settings</a>
+                                    <span class="text-fade">Preferences & Security</span>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-30">
+                                <div class="me-15 bg-info-light h-50 w-50 l-h-60 rounded text-center">
+                                    <span class="icon-Attachment1 fs-24">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                    </span>
+                                </div>
+                                <div class="d-flex flex-column fw-500">
+                                    <form action="{{ route('logout') }}" method="POST" class="d-inline">
                                         @csrf
-                                        <button type="submit" class="text-dark hover-info mb-1 fs-16 btn btn-link">Logout</button>
+                                        <button type="submit" class="text-dark hover-info mb-1 fs-16 btn btn-link p-0">
+                                            Logout
+                                        </button>
                                     </form>
+                                    <span class="text-fade">Safely sign out</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="dropdown-divider my-30"></div>
                     </div>
                 </div>
             </div>
@@ -668,21 +1069,27 @@
         <div class="chat-container">
             <button class="chat-toggle-btn" id="chat-toggle-btn">
                 <i class="fa fa-comment"></i>
+                <span class="badge badge-danger position-absolute" id="unread-count" style="display: none;">0</span>
             </button>
             <div class="chat-window" id="chat-window">
                 <div class="chat-header">
-                    <span>Chat</span>
+                    <div class="d-flex align-items-center">
+                        <span>Chat</span>
+                        @if(!auth()->user()->role->isAdmin())
+                            <small class="ms-2">(Chatting with Admin)</small>
+                        @endif
+                    </div>
                     <button class="chat-toggle-btn" id="chat-close-btn">
                         <i class="fa fa-times"></i>
                     </button>
                 </div>
+                @if(auth()->user()->role->isAdmin())
+                <div class="chat-users-list" id="chat-users-list">
+                    <!-- Users will be loaded here -->
+                </div>
+                @endif
                 <div class="chat-body" id="chat-body">
-                    <div class="chat-message other">
-                        How is your solar system doing?
-                    </div>
-                    <div class="chat-message user">
-                        Just checking in!
-                    </div>
+                    <!-- Messages will be loaded here -->
                 </div>
                 <div class="chat-input-area">
                     <input type="text" id="chat-input" placeholder="Type a message...">
@@ -692,6 +1099,55 @@
         </div>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
+                let lastScrollTop = 0;
+                const header = document.querySelector('.main-header');
+                const sidebar = document.querySelector('.main-sidebar');
+                
+                // Function to handle scroll
+                function handleScroll() {
+                    let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                    
+                    // Header behavior
+                    if (currentScroll > lastScrollTop && currentScroll > 70) {
+                        // Scrolling down & past header height
+                        header.classList.add('header-scroll-down');
+                        header.classList.remove('header-scroll-up');
+                        
+                        // Adjust sidebar top position
+                        sidebar.style.top = '0';
+                    } else {
+                        // Scrolling up or at top
+                        header.classList.add('header-scroll-up');
+                        header.classList.remove('header-scroll-down');
+                        
+                        // Reset sidebar position
+                        sidebar.style.top = '70px';
+                    }
+                    
+                    lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+                }
+
+                // Throttle scroll event
+                let ticking = false;
+                window.addEventListener('scroll', function() {
+                    if (!ticking) {
+                        window.requestAnimationFrame(function() {
+                            handleScroll();
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
+                });
+
+                // Handle sidebar toggle
+                const sidebarToggle = document.querySelector('[data-toggle="push-menu"]');
+                if (sidebarToggle) {
+                    sidebarToggle.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        document.body.classList.toggle('sidebar-open');
+                    });
+                }
+
                 // Chat Toggle Functionality
                 const chatToggleBtn = document.getElementById('chat-toggle-btn');
                 const chatCloseBtn = document.getElementById('chat-close-btn');
@@ -817,6 +1273,203 @@
         <script src="/assets/js/dashboard.js"></script>
         <script src="/assets/js/slider.js"></script>
         <script src="/assets/js/range-sliders.init.js"></script>
+        <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const isAdmin = {{ auth()->user()->role->isAdmin() ? 'true' : 'false' }};
+                let currentReceiverId = null;
+                let lastMessageId = null;
+                
+                // Initialize Pusher
+                const pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
+                    cluster: '{{ env('PUSHER_APP_CLUSTER') }}',
+                    encrypted: true
+                });
+
+                const channel = pusher.subscribe('chat.' + {{ auth()->id() }});
+                channel.bind('new-message', function(data) {
+                    if (data.message.sender_id === currentReceiverId || !currentReceiverId) {
+                        appendMessage(data.message);
+                        updateUnreadCount(1);
+                    }
+                });
+
+                // Chat elements
+                const chatBody = document.getElementById('chat-body');
+                const chatInput = document.getElementById('chat-input');
+                const chatSendBtn = document.getElementById('chat-send-btn');
+                const unreadCount = document.getElementById('unread-count');
+                const chatWindow = document.getElementById('chat-window');
+                const chatToggleBtn = document.getElementById('chat-toggle-btn');
+                const chatCloseBtn = document.getElementById('chat-close-btn');
+
+                // Toggle chat window
+                function toggleChat() {
+                    chatWindow.classList.toggle('active');
+                    if (chatWindow.classList.contains('active') && currentReceiverId) {
+                        markMessagesAsRead(currentReceiverId);
+                    }
+                }
+
+                chatToggleBtn.addEventListener('click', toggleChat);
+                chatCloseBtn.addEventListener('click', toggleChat);
+
+                // Load messages for a specific user
+                function loadMessages(userId = null) {
+                    let url = '/messages';
+                    if (userId) {
+                        currentReceiverId = userId;
+                        url += `?user_id=${userId}`;
+                    }
+                    
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(messages => {
+                            chatBody.innerHTML = '';
+                            messages.forEach(message => appendMessage(message));
+                            chatBody.scrollTop = chatBody.scrollHeight;
+                            if (chatWindow.classList.contains('active')) {
+                                markMessagesAsRead(currentReceiverId);
+                            }
+                        });
+                }
+
+                // For admin: load users list
+                if (isAdmin) {
+                    const usersList = document.getElementById('chat-users-list');
+                    fetch('/users')
+                        .then(response => response.json())
+                        .then(users => {
+                            usersList.innerHTML = users.map(user => `
+                                <div class="chat-user" data-user-id="${user.id}">
+                                    <div class="chat-user-avatar">
+                                        ${user.profile_photo 
+                                            ? `<img src="/storage/${user.profile_photo}" alt="${user.name}">` 
+                                            : user.name.charAt(0)
+                                        }
+                                    </div>
+                                    <div class="chat-user-info">
+                                        <div class="chat-user-name">${user.name}</div>
+                                        <div class="chat-user-status ${user.is_online ? 'online' : ''}"></div>
+                                    </div>
+                                </div>
+                            `).join('');
+
+                            // Add click event listeners to chat users
+                            document.querySelectorAll('.chat-user').forEach(userElement => {
+                                userElement.addEventListener('click', function() {
+                                    const userId = this.dataset.userId;
+                                    currentReceiverId = userId;
+                                    loadMessages(userId);
+                                    document.querySelectorAll('.chat-user').forEach(el => el.classList.remove('active'));
+                                    this.classList.add('active');
+                                });
+                            });
+                        });
+                } else {
+                    // For regular users: load admin messages
+                    fetch('/admins')
+                        .then(response => response.json())
+                        .then(admins => {
+                            if (admins.length > 0) {
+                                currentReceiverId = admins[0].id;
+                                loadMessages(admins[0].id);
+                            }
+                        });
+                }
+
+                // Send message function
+                function sendMessage() {
+                    const message = chatInput.value.trim();
+                    if (!message || !currentReceiverId) return;
+
+                    const formData = new FormData();
+                    formData.append('receiver_id', currentReceiverId);
+                    formData.append('message', message);
+                    formData.append('_token', '{{ csrf_token() }}');
+
+                    fetch('/messages', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(message => {
+                        appendMessage(message);
+                        chatInput.value = '';
+                        chatBody.scrollTop = chatBody.scrollHeight;
+                    })
+                    .catch(error => {
+                        console.error('Error sending message:', error);
+                    });
+                }
+
+                // Mark messages as read
+                function markMessagesAsRead(senderId) {
+                    const formData = new FormData();
+                    formData.append('sender_id', senderId);
+                    formData.append('_token', '{{ csrf_token() }}');
+
+                    fetch('/messages/read', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: formData
+                    });
+                }
+
+                // Append message to chat
+                function appendMessage(message) {
+                    const isOwn = message.sender_id === {{ auth()->id() }};
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `chat-message ${isOwn ? 'user' : 'other'}`;
+                    
+                    const formattedTime = new Date(message.created_at).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    messageDiv.innerHTML = `
+                        <div class="message-content">${message.message}</div>
+                        <div class="message-time">${formattedTime}</div>
+                    `;
+                    
+                    if (!isOwn && !message.read) {
+                        messageDiv.classList.add('unread');
+                    }
+            
+                    chatBody.appendChild(messageDiv);
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                }
+
+                // Update unread count
+                function updateUnreadCount(increment = 0) {
+                    let count = parseInt(unreadCount.textContent || '0') + increment;
+                    unreadCount.textContent = count;
+                    unreadCount.style.display = count > 0 ? 'block' : 'none';
+                }
+
+                // Event listeners
+                chatSendBtn.addEventListener('click', sendMessage);
+                chatInput.addEventListener('keypress', e => {
+                    if (e.key === 'Enter') sendMessage();
+                });
+
+                // For admin: select user to chat with
+                window.selectUser = function(userId) {
+                    currentReceiverId = userId;
+                    loadMessages(userId);
+                };
+
+                // Initial load
+                if (!isAdmin && currentReceiverId) {
+                    loadMessages(currentReceiverId);
+                }
+            });
+        </script>
     </div>
 </body>
 
