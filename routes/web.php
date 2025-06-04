@@ -49,5 +49,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/messages/read', [MessageController::class, 'markAsRead']);
     Route::get('/users', [MessageController::class, 'getUsers']);
     Route::get('/admins', [MessageController::class, 'getAdmins']);
+
+    // Power Monitoring Routes
+   
 });
 

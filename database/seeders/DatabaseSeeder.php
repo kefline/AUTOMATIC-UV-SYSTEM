@@ -23,5 +23,7 @@ class DatabaseSeeder extends Seeder
         
         // Add the SolarSystemSeeder
         $this->call(SolarSystemSeeder::class);
+
+        
     }
 }
