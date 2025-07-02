@@ -5,7 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class SystemStatus extends Model
+
 {
+    protected $table = 'system_statuses';
     protected $fillable = [
         'total_capacity',
         'current_production',

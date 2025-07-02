@@ -299,33 +299,113 @@ class DashboardController extends Controller
     {
         try {
             $timeFrame = $request->query('time_frame', 'thismonth');
-            $dateRange = $this->getDateRange($timeFrame);
+            [$start, $end] = $this->getDateRange($timeFrame);
 
-            $data = SystemStatus::selectRaw("TO_CHAR(last_updated, 'YYYY-MM') AS month")
-                ->selectRaw('SUM(current_production) AS total_production')
-                ->selectRaw('SUM(current_consumption) AS total_consumption')
-                ->whereBetween('last_updated', [$dateRange['start'], $dateRange['end']])
-                ->groupByRaw("TO_CHAR(last_updated, 'YYYY-MM')")
-                ->orderBy('month')
+            Log::info('Fetching generation details', [
+                'time_frame' => $timeFrame,
+                'start_date' => $start->toDateTimeString(),
+                'end_date' => $end->toDateTimeString(),
+            ]);
+
+            // Get daily data points for better chart visualization
+            $data = DB::table('system_statuses')
+                ->selectRaw("
+                DATE(last_updated) AS date,
+                TO_CHAR(last_updated, 'Mon') AS month_name,
+                EXTRACT(DAY FROM last_updated) AS day_of_month,
+                ROUND(AVG(COALESCE(current_production, 0))::numeric, 2) AS production,
+                ROUND(AVG(COALESCE(current_consumption, 0))::numeric, 2) AS consumption
+            ")
+                ->whereBetween('last_updated', [$start, $end])
+                ->whereNotNull('current_production')
+                ->whereNotNull('current_consumption')
+                ->groupByRaw("DATE(last_updated), TO_CHAR(last_updated, 'Mon'), EXTRACT(DAY FROM last_updated)")
+                ->orderBy('date')
                 ->get();
 
-            $formattedData = $data->map(fn($item) => [
-                'month' => $item->month,
-                'total_production' => round($item->total_production, 2),
-                'total_consumption' => round($item->total_consumption, 2),
+            if ($data->isEmpty()) {
+                Log::warning("No generation data found between {$start->toDateString()} and {$end->toDateString()}");
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'No data available for the selected time period',
+                    'start_date' => $start->toDateString(),
+                    'end_date' => $end->toDateString(),
+                    'data' => [],
+                    'chart_data' => [
+                        'labels' => [],
+                        'production' => [],
+                        'consumption' => []
+                    ]
+                ]);
+            }
+
+            // Format data for response
+            $formattedData = $data->map(function ($item) {
+                return [
+                    'date' => $item->date,
+                    'month' => $item->month_name,
+                    'day' => (int) $item->day_of_month,
+                    'production' => (float) $item->production,
+                    'consumption' => (float) $item->consumption,
+                ];
+            });
+
+            // Prepare chart-ready data
+            $chartData = [
+                'labels' => $data->pluck('month_name')->unique()->values()->toArray(),
+                'datasets' => [
+                    [
+                        'label' => 'Production',
+                        'data' => $data->pluck('production')->map(fn($val) => (float) $val)->toArray(),
+                        'borderColor' => '#60A5FA',
+                        'backgroundColor' => 'rgba(96, 165, 250, 0.1)',
+                        'tension' => 0.4
+                    ],
+                    [
+                        'label' => 'Consumption',
+                        'data' => $data->pluck('consumption')->map(fn($val) => (float) $val)->toArray(),
+                        'borderColor' => '#374151',
+                        'backgroundColor' => 'rgba(55, 65, 81, 0.1)',
+                        'tension' => 0.4
+                    ]
+                ]
+            ];
+
+            // Calculate summary statistics
+            $totalProduction = $formattedData->sum('production');
+            $totalConsumption = $formattedData->sum('consumption');
+            $avgProduction = $formattedData->avg('production');
+            $avgConsumption = $formattedData->avg('consumption');
+            $peakProduction = $formattedData->max('production');
+            $peakConsumption = $formattedData->max('consumption');
+
+            return response()->json([
+                'status' => 'success',
+                'start_date' => $start->toDateString(),
+                'end_date' => $end->toDateString(),
+                'summary' => [
+                    'total_production' => round($totalProduction, 2),
+                    'total_consumption' => round($totalConsumption, 2),
+                    'avg_production' => round($avgProduction, 2),
+                    'avg_consumption' => round($avgConsumption, 2),
+                    'peak_production' => round($peakProduction, 2),
+                    'peak_consumption' => round($peakConsumption, 2),
+                    'data_points' => $data->count()
+                ],
+                'data' => $formattedData->values(),
+                'chart_data' => $chartData
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching generation details: ' . $e->getMessage(), [
+                'exception' => $e,
+                'trace' => $e->getTraceAsString()
             ]);
 
             return response()->json([
-                'start_date' => $dateRange['start']->toDateString(),
-                'end_date' => $dateRange['end']->toDateString(),
-                'data' => $formattedData,
-                'status' => 'success',
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error in getGenerationDetails: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            return response()->json([
-                'error' => 'Failed to fetch generation details',
                 'status' => 'error',
+                'message' => 'Failed to fetch generation details',
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error',
             ], 500);
         }
     }
