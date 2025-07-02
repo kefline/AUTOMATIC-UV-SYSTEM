@@ -117,7 +117,7 @@
 
         .box-header {
             padding: 1.25rem;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .box-body {
@@ -183,7 +183,7 @@
         }
 
         .table-hover tbody tr:hover {
-            background-color: rgba(0,0,0,0.02);
+            background-color: rgba(0, 0, 0, 0.02);
         }
 
         /* Badge Styles */
@@ -221,7 +221,7 @@
             .content-wrapper {
                 margin-left: 0;
             }
-            
+
             .sidebar-open .content-wrapper {
                 transform: translateX(250px);
             }
@@ -245,6 +245,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -284,7 +285,7 @@
             background: var(--primary-color);
             color: white;
             border: none;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -306,7 +307,7 @@
             height: 400px;
             background: white;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             display: none;
             flex-direction: column;
             overflow: hidden;
@@ -574,16 +575,16 @@
                         <li class="dropdown user user-menu">
                             <a href="#" class="waves-effect waves-light dropdown-toggle w-auto l-h-12 bg-transparent p-0 no-shadow d-flex align-items-center" data-bs-toggle="dropdown">
                                 @if(auth()->user()->profile_photo)
-                                    <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" 
-                                        class="avatar rounded-circle bg-primary-light h-40 w-40" 
-                                        alt="{{ auth()->user()->name }}" 
-                                        style="object-fit: cover;" />
+                                <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}"
+                                    class="avatar rounded-circle bg-primary-light h-40 w-40"
+                                    alt="{{ auth()->user()->name }}"
+                                    style="object-fit: cover;" />
                                 @else
-                                    <div class="avatar rounded-circle bg-primary d-flex align-items-center justify-content-center h-40 w-40">
-                                        <span class="text-white fw-bold" style="font-size: 1.2rem;">
-                                            {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
-                                        </span>
-                                    </div>
+                                <div class="avatar rounded-circle bg-primary d-flex align-items-center justify-content-center h-40 w-40">
+                                    <span class="text-white fw-bold" style="font-size: 1.2rem;">
+                                        {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                                    </span>
+                                </div>
                                 @endif
                                 <div class="ms-2">
                                     <h6 class="mb-0 fw-semibold" style="font-size: 15px;">{{ auth()->user()->name }}</h6>
@@ -630,7 +631,7 @@
                                     <span>Performance</span>
                                 </a>
                             </li>
-                            
+
                             @if(auth()->check() && auth()->user()->role && auth()->user()->role->isAdmin())
                             <li>
                                 <a href="{{route('users.add')}}">
@@ -644,7 +645,7 @@
                 </div>
             </section>
         </aside>
-        
+
         <div class="content-wrapper">
             <div class="container-full">
                 <section class="content">
@@ -819,9 +820,9 @@
                                             </div>
                                             <hr class="my-35">
                                             <div>
-                                                <p class="mb-2"><span class="badge badge-dot bg-warning"></span> Power Usage</p>
+                                                <p class="mb-2"><span class="badge badge-dot bg-warning"></span> Solar efficiency</p>
                                                 <div>
-                                                    <p class="mb-0">1 Hour usage <span class="fw-bold" id="one-hour-usage">--</span> kWh</p>
+                                                    <p class="mb-0"><span class="fw-bold" id="solar efficiency">--</span></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -993,13 +994,13 @@
                             <div class="d-flex flex-row">
                                 <div class="position-relative">
                                     @if(auth()->user()->profile_photo)
-                                        <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" alt="user" 
-                                            class="rounded-circle bg-primary-light" style="width: 100px; height: 100px; object-fit: cover;">
+                                    <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" alt="user"
+                                        class="rounded-circle bg-primary-light" style="width: 100px; height: 100px; object-fit: cover;">
                                     @else
-                                        <div class="rounded-circle bg-primary-light d-flex align-items-center justify-content-center text-white"
-                                            style="width: 100px; height: 100px; font-size: 2.5rem;">
-                                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                                        </div>
+                                    <div class="rounded-circle bg-primary-light d-flex align-items-center justify-content-center text-white"
+                                        style="width: 100px; height: 100px; font-size: 2.5rem;">
+                                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                    </div>
                                     @endif
                                     <span class="position-absolute bottom-0 end-0 bg-success rounded-circle p-1"
                                         style="width: 12px; height: 12px;" title="Online"></span>
@@ -1011,7 +1012,7 @@
                                         <span class="icon-Mail-notification me-5 text-success">
                                             <span class="path1"></span>
                                             <span class="path2"></span>
-                                        </span> 
+                                        </span>
                                         {{ auth()->user()->email }}
                                     </a>
                                 </div>
@@ -1076,7 +1077,7 @@
                     <div class="d-flex align-items-center">
                         <span>Chat</span>
                         @if(!auth()->user()->role->isAdmin())
-                            <small class="ms-2">(Chatting with Admin)</small>
+                        <small class="ms-2">(Chatting with Admin)</small>
                         @endif
                     </div>
                     <button class="chat-toggle-btn" id="chat-close-btn">
@@ -1102,32 +1103,25 @@
                 let lastScrollTop = 0;
                 const header = document.querySelector('.main-header');
                 const sidebar = document.querySelector('.main-sidebar');
-                
-                // Function to handle scroll
+
                 function handleScroll() {
                     let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-                    
-                    // Header behavior
+
                     if (currentScroll > lastScrollTop && currentScroll > 70) {
-                        // Scrolling down & past header height
                         header.classList.add('header-scroll-down');
                         header.classList.remove('header-scroll-up');
-                        
-                        // Adjust sidebar top position
+
                         sidebar.style.top = '0';
                     } else {
-                        // Scrolling up or at top
                         header.classList.add('header-scroll-up');
                         header.classList.remove('header-scroll-down');
-                        
-                        // Reset sidebar position
+
                         sidebar.style.top = '70px';
                     }
-                    
+
                     lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
                 }
 
-                // Throttle scroll event
                 let ticking = false;
                 window.addEventListener('scroll', function() {
                     if (!ticking) {
@@ -1139,7 +1133,6 @@
                     }
                 });
 
-                // Handle sidebar toggle
                 const sidebarToggle = document.querySelector('[data-toggle="push-menu"]');
                 if (sidebarToggle) {
                     sidebarToggle.addEventListener('click', function(e) {
@@ -1148,7 +1141,6 @@
                     });
                 }
 
-                // Chat Toggle Functionality
                 const chatToggleBtn = document.getElementById('chat-toggle-btn');
                 const chatCloseBtn = document.getElementById('chat-close-btn');
                 const chatWindow = document.getElementById('chat-window');
@@ -1181,7 +1173,6 @@
                     }
                 });
 
-                // Notification Clear Functionality
                 const clearNotifications = document.getElementById('clear-notifications');
                 const notificationList = document.querySelector('.notification-list');
                 const notificationCount = document.getElementById('notification-count');
@@ -1192,7 +1183,6 @@
                     notificationCount.textContent = '0';
                 });
 
-                // Existing Dashboard Data Fetch
                 function fetchDashboardData() {
                     fetch('/api/system/dashboard')
                         .then(response => {
@@ -1202,29 +1192,28 @@
                             return response.json();
                         })
                         .then(data => {
-                            // Update system and panel status
                             document.getElementById('system-efficiency').textContent = data.system_status.overall_efficiency + '%';
-                            document.getElementById('power-generation').textContent = data.system_status.current_production + ' mW';
-                            document.getElementById('energy-consumed').textContent = data.system_status.current_consumption + ' mWh';
+                            document.getElementById('power-generation').textContent = (data.system_status.current_production * 1000).toFixed(2) + ' µW';
+                            document.getElementById('energy-consumed').textContent = (data.system_status.current_consumption * 1000).toFixed(2) + ' µWh';
                             document.getElementById('total-charging').textContent = data.system_status.total_charging + ' %';
-                            document.getElementById('one-hour-usage').textContent = data.system_status.one_hour_usage + ' mWh';
+                            document.getElementById('solar efficiency').textContent = data.system_status.one_hour_usage  + ' %';
                             document.getElementById('total-capacity').textContent = data.system_status.total_capacity + ' mWh';
                             document.getElementById('panel-status').textContent = data.panel_status.status;
+                            document.getElementById('panel-status').className = 'fw-600 mb-0 ' + (data.panel_status.status === 'Active' ? 'text-success' : 'text-danger');
+                            document.getElementById('panel-angle').className = 'fw-600 mb-0 ' + (data.panel_status.current_angle > 0 ? 'text-primary' : 'text-secondary');
+                            document.getElementById('panel-angle').style.color = data.panel_status.current_angle > 0 ? '#007bff' : '#6c757d';
                             document.getElementById('panel-angle').textContent = data.panel_status.current_angle + '°';
 
-                            // Update user information
                             const userMenuLink = document.querySelector('.user-menu a');
                             const userNameSpan = document.querySelector('.user-menu .user-name');
 
-                            // Update the name in the dropdown
                             if (userNameSpan) {
                                 userNameSpan.textContent = data.user.name;
                             }
                             if (userMenuLink) {
-                                userMenuLink.title = data.user.name; // Update tooltip
+                                userMenuLink.title = data.user.name;
                             }
 
-                            // Update email (e.g., in a modal or another element)
                             const userEmailElement = document.querySelector('#quick_user_toggle .user-email');
                             if (userEmailElement) {
                                 userEmailElement.textContent = data.user.email || 'No email';
@@ -1234,13 +1223,12 @@
                             console.error('Error fetching dashboard data:', error);
                             const elements = [
                                 'system-efficiency', 'power-generation', 'energy-consumed',
-                                'total-charging', 'one-hour-usage', 'total-capacity',
+                                'total-charging', 'solar efficiency', 'total-capacity',
                                 'panel-status', 'panel-angle'
                             ];
                             elements.forEach(id => {
                                 document.getElementById(id).textContent = 'Error';
                             });
-                            // Handle user data error
                             const userNameSpan = document.querySelector('.user-menu .user-name');
                             const userMenuLink = document.querySelector('.user-menu a');
                             const userEmailElement = document.querySelector('#quick_user_toggle .user-email');
@@ -1274,202 +1262,7 @@
         <script src="/assets/js/slider.js"></script>
         <script src="/assets/js/range-sliders.init.js"></script>
         <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const isAdmin = {{ auth()->user()->role->isAdmin() ? 'true' : 'false' }};
-                let currentReceiverId = null;
-                let lastMessageId = null;
-                
-                // Initialize Pusher
-                const pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
-                    cluster: '{{ env('PUSHER_APP_CLUSTER') }}',
-                    encrypted: true
-                });
 
-                const channel = pusher.subscribe('chat.' + {{ auth()->id() }});
-                channel.bind('new-message', function(data) {
-                    if (data.message.sender_id === currentReceiverId || !currentReceiverId) {
-                        appendMessage(data.message);
-                        updateUnreadCount(1);
-                    }
-                });
-
-                // Chat elements
-                const chatBody = document.getElementById('chat-body');
-                const chatInput = document.getElementById('chat-input');
-                const chatSendBtn = document.getElementById('chat-send-btn');
-                const unreadCount = document.getElementById('unread-count');
-                const chatWindow = document.getElementById('chat-window');
-                const chatToggleBtn = document.getElementById('chat-toggle-btn');
-                const chatCloseBtn = document.getElementById('chat-close-btn');
-
-                // Toggle chat window
-                function toggleChat() {
-                    chatWindow.classList.toggle('active');
-                    if (chatWindow.classList.contains('active') && currentReceiverId) {
-                        markMessagesAsRead(currentReceiverId);
-                    }
-                }
-
-                chatToggleBtn.addEventListener('click', toggleChat);
-                chatCloseBtn.addEventListener('click', toggleChat);
-
-                // Load messages for a specific user
-                function loadMessages(userId = null) {
-                    let url = '/messages';
-                    if (userId) {
-                        currentReceiverId = userId;
-                        url += `?user_id=${userId}`;
-                    }
-                    
-                    fetch(url)
-                        .then(response => response.json())
-                        .then(messages => {
-                            chatBody.innerHTML = '';
-                            messages.forEach(message => appendMessage(message));
-                            chatBody.scrollTop = chatBody.scrollHeight;
-                            if (chatWindow.classList.contains('active')) {
-                                markMessagesAsRead(currentReceiverId);
-                            }
-                        });
-                }
-
-                // For admin: load users list
-                if (isAdmin) {
-                    const usersList = document.getElementById('chat-users-list');
-                    fetch('/users')
-                        .then(response => response.json())
-                        .then(users => {
-                            usersList.innerHTML = users.map(user => `
-                                <div class="chat-user" data-user-id="${user.id}">
-                                    <div class="chat-user-avatar">
-                                        ${user.profile_photo 
-                                            ? `<img src="/storage/${user.profile_photo}" alt="${user.name}">` 
-                                            : user.name.charAt(0)
-                                        }
-                                    </div>
-                                    <div class="chat-user-info">
-                                        <div class="chat-user-name">${user.name}</div>
-                                        <div class="chat-user-status ${user.is_online ? 'online' : ''}"></div>
-                                    </div>
-                                </div>
-                            `).join('');
-
-                            // Add click event listeners to chat users
-                            document.querySelectorAll('.chat-user').forEach(userElement => {
-                                userElement.addEventListener('click', function() {
-                                    const userId = this.dataset.userId;
-                                    currentReceiverId = userId;
-                                    loadMessages(userId);
-                                    document.querySelectorAll('.chat-user').forEach(el => el.classList.remove('active'));
-                                    this.classList.add('active');
-                                });
-                            });
-                        });
-                } else {
-                    // For regular users: load admin messages
-                    fetch('/admins')
-                        .then(response => response.json())
-                        .then(admins => {
-                            if (admins.length > 0) {
-                                currentReceiverId = admins[0].id;
-                                loadMessages(admins[0].id);
-                            }
-                        });
-                }
-
-                // Send message function
-                function sendMessage() {
-                    const message = chatInput.value.trim();
-                    if (!message || !currentReceiverId) return;
-
-                    const formData = new FormData();
-                    formData.append('receiver_id', currentReceiverId);
-                    formData.append('message', message);
-                    formData.append('_token', '{{ csrf_token() }}');
-
-                    fetch('/messages', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .then(message => {
-                        appendMessage(message);
-                        chatInput.value = '';
-                        chatBody.scrollTop = chatBody.scrollHeight;
-                    })
-                    .catch(error => {
-                        console.error('Error sending message:', error);
-                    });
-                }
-
-                // Mark messages as read
-                function markMessagesAsRead(senderId) {
-                    const formData = new FormData();
-                    formData.append('sender_id', senderId);
-                    formData.append('_token', '{{ csrf_token() }}');
-
-                    fetch('/messages/read', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: formData
-                    });
-                }
-
-                // Append message to chat
-                function appendMessage(message) {
-                    const isOwn = message.sender_id === {{ auth()->id() }};
-                    const messageDiv = document.createElement('div');
-                    messageDiv.className = `chat-message ${isOwn ? 'user' : 'other'}`;
-                    
-                    const formattedTime = new Date(message.created_at).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-
-                    messageDiv.innerHTML = `
-                        <div class="message-content">${message.message}</div>
-                        <div class="message-time">${formattedTime}</div>
-                    `;
-                    
-                    if (!isOwn && !message.read) {
-                        messageDiv.classList.add('unread');
-                    }
-            
-                    chatBody.appendChild(messageDiv);
-                    chatBody.scrollTop = chatBody.scrollHeight;
-                }
-
-                // Update unread count
-                function updateUnreadCount(increment = 0) {
-                    let count = parseInt(unreadCount.textContent || '0') + increment;
-                    unreadCount.textContent = count;
-                    unreadCount.style.display = count > 0 ? 'block' : 'none';
-                }
-
-                // Event listeners
-                chatSendBtn.addEventListener('click', sendMessage);
-                chatInput.addEventListener('keypress', e => {
-                    if (e.key === 'Enter') sendMessage();
-                });
-
-                // For admin: select user to chat with
-                window.selectUser = function(userId) {
-                    currentReceiverId = userId;
-                    loadMessages(userId);
-                };
-
-                // Initial load
-                if (!isAdmin && currentReceiverId) {
-                    loadMessages(currentReceiverId);
-                }
-            });
-        </script>
     </div>
 </body>
 

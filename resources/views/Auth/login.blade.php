@@ -8,15 +8,44 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Log in </title>
+    <title>Log in - Automated Solar Panel UV Tracking System</title>
 
     <link rel="stylesheet"
         href="https://solar-admin-template.multipurposethemes.com/bs5/template/vertical/src/css/vendors_css.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/skin_color.css">
+
+    <style>
+        .system-title {
+            background: linear-gradient(135deg, rgb(53, 83, 255), #f7931e);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .system-subtitle {
+            color: #666;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+
+        .solar-icon {
+            color: #ff6b35;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            text-align: center;
+            display: block;
+        }
+    </style>
 
 </head>
 
@@ -31,8 +60,11 @@
                     <div class="col-lg-5 col-md-5 col-12">
                         <div class="bg-white rounded10 shadow-lg">
                             <div class="content-top-agile p-20 pb-0">
+
+                                <h1 class="system-title">AUTOMATED SOLAR PANEL UV TRACKING SYSTEM</h1>
+                                <p class="system-subtitle">Advanced Solar Energy Management Platform</p>
                                 <h2 class="text-primary fw-600">Let's Get Started</h2>
-                                <p class="mb-0 text-fade">Sign in to continue to Solar Admin.</p>
+                                <p class="mb-0 text-fade">Sign in to access your solar tracking dashboard.</p>
                             </div>
                             <div class="p-40">
                                 @if ($errors->any())
@@ -53,7 +85,7 @@
                                         <div class="input-group mb-3">
                                             <span class="input-group-text bg-transparent"><i class="fas fa-user"></i></span>
                                             <input type="email" name="email" class="form-control ps-15 bg-transparent"
-                                                placeholder="enter your email" required>
+                                                placeholder="Enter your email" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -90,13 +122,13 @@
                                             </div>
                                         </div>
 
-
                                         <div class="col-12 text-center">
-                                            <button type="submit" class="btn btn-primary w-p100 mt-10">SIGN IN</button>
+                                            <button type="submit" class="btn btn-primary w-p100 mt-10">
+                                                <i class="fas fa-sign-in-alt me-2"></i>SIGN IN TO SOLAR SYSTEM
+                                            </button>
                                         </div>
                                     </div>
                                 </form>
-
 
                                 <div class="text-center">
                                     <p class="mt-20 text-fade">- Sign With -</p>

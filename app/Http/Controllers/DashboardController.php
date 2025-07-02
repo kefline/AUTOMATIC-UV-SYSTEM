@@ -107,8 +107,11 @@ class DashboardController extends Controller
 
     public function updatePanelStatus(Request $request)
     {
-        if ($request->header('X-API-KEY') !== env('MICROCONTROLLER_API_KEY', 'lTXKl4Fw6t4CQ3TmQMb7DE3QmOAJzX7GknADWKZjOjI=')) {
-            return response()->json(['message' => 'Unauthorized access. Invalid or missing API key.', 'error' => true], 401);
+        if ($request->header('X-API-KEY') !== env('MICROCONTROLLER_API_KEY')) {
+            return response()->json([
+                'message' => 'Unauthorized access. Invalid or missing API key.',
+                'error' => true
+            ], 401);
         }
 
         $validated = $request->validate([
@@ -125,16 +128,29 @@ class DashboardController extends Controller
         ]);
 
         if (empty($updateData)) {
-            return response()->json(['message' => 'No update data provided.', 'error' => true], 422);
+            return response()->json([
+                'message' => 'No update data provided.',
+                'error' => true
+            ], 422);
         }
 
-        $panel = SolarPanel::updateOrCreate(['panel_id' => $request->input('panel_id')], $updateData);
+        // Update or create the solar panel record
+        $panel = SolarPanel::updateOrCreate(
+            ['panel_id' => $request->input('panel_id')],
+            $updateData
+        );
 
+        // Return response with panel status nested in "panel_status"
         return response()->json([
             'message' => 'Panel status updated successfully',
-            'panel' => $panel,
+            'panel_status' => [
+                'status' => $panel->status,
+                'current_angle' => $panel->current_angle,
+                'overall_efficiency' => $panel->current_efficiency,
+            ],
         ]);
     }
+
 
     public function getWeeklyProduction()
     {
