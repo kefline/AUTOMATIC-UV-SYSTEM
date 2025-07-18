@@ -54,6 +54,7 @@ This system is built with a **Laravel backend**, integrates with an ESP32 microc
 - MySQL
 - Node.js & NPM (for frontend assets)
 - MQTT Broker (e.g., Mosquitto)
+- Arduino IDE
 
 ### Setup Instructions
 
@@ -79,3 +80,10 @@ npm install && npm run dev
 
 # Start the Laravel server
 php artisan serve
+
+##SETTING UP THE ESP32
+1) Save all the files inthe IOT_codes folder under one folder.
+2) open the main_project.ino with Arduino IDE.
+3) Then connect your ESP32 to the computer.
+4) Compile and upload the main_project.ino file to the ESP32.
+5) Observe the results inthe serial monitor.
